@@ -1,0 +1,7 @@
+interface:
+  display_name: "TP"
+  short_description: "Traceable BUSFIN 8200 AI interactions"
+  default_prompt: "Use $tp for Problem Set item [item] to trace this substantive request: [request]."
+
+policy:
+  allow_implicit_invocation: false
