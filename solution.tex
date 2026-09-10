@@ -6,6 +6,7 @@
 \usepackage{geometry}
 \usepackage{booktabs}
 \usepackage{xcolor}
+\usepackage{float}
 
 \pdfminorversion=4
 \pdfobjcompresslevel=0
@@ -102,9 +103,13 @@ Since $e^{\overline{dp}}$ is always positive, we have $0 < \kappa < 1$. Therefor
 \end{align}
 
 \subsection*{1 (b)}
+Using Equation 1.4 from the problem set, I decomposed the variation in the log dividend-price ratio into variations associated with the discounted future returns, discounted future dividend growth and terminal dividend-price ratio. By constructing these regressors at a 12-month increment, I regressed each component on $dp_t$ in univariate OLS models to estimate their respective betas through different horizons as shown below. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/1b_figure.png}
+    \label{fig:q1}
+\end{figure}
 
-
-
-
-
+The figure indicates that over the short horizon (up to 5 years), the discounted future dividend-price ratio is persistent and responsible for the majority of the variation in the log dividend-price ratio, as demonstrated by a strongly positive $\beta_{dp}^{(H)}$. Indeed, at H = 1, this component explains 80\% of the variation in $dp_t$. However, as the horizon extends beyond year 1, $\beta_{dp}^{(H)}$ gradually declines and approaches zero at H = 12, before turning negative for the rest of the horizons. This further proves the no-bubble condition imposed in part (a). Meanwhile, from H = 4 onward, the discounted future return component quickly rises and becomes the dominant force in explaining the variability in $dp_t$, with $\beta_{re}^{(H)}$ reaching 0.9 at H = 20. This further supports the notion that the discount rate component is more relevant in explaining long-run, rather than short-run, variation in the log dividend-price ratio.  
+As for the dividend growth component, $\beta_{dg}^{(H)}$ remains relatively flat, hovering around 0.2 before gradually converging to 0.1 at H = 20. While the log dividend-price ratio has some relationship with discounted future dividend growth, it is considerably weaker than its relationship with discounted future expected returns, especially in the long horizons. Indeed, this evidence is consistent with Cochrane's address to Stambaugh, stating that log dividend-price ratio's inability to forecast future dividend growth proves that stock returns are predictable. 
 \end{document}
