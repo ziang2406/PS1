@@ -146,7 +146,7 @@ coefficient_plot <- ggplot(
     x = "Horizon H (years)",
     y = "Long-run coefficient",
     color = NULL,
-    title = "VAR-implied variance decomposition"
+    title = "Figure 2: VAR-implied variance decomposition"
   ) +
   theme_classic(base_size = 14) +
   theme(

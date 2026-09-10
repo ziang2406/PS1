@@ -112,4 +112,21 @@ Using Equation 1.4 from the problem set, I decomposed the variation in the log d
 
 The figure indicates that over the short horizon (up to 5 years), the discounted future dividend-price ratio is persistent and responsible for the majority of the variation in the log dividend-price ratio, as demonstrated by a strongly positive $\beta_{dp}^{(H)}$. Indeed, at H = 1, this component explains 80\% of the variation in $dp_t$. However, as the horizon extends beyond year 1, $\beta_{dp}^{(H)}$ gradually declines and approaches zero at H = 12, before turning negative for the rest of the horizons. This further proves the no-bubble condition imposed in part (a). Meanwhile, from H = 4 onward, the discounted future return component quickly rises and becomes the dominant force in explaining the variability in $dp_t$, with $\beta_{re}^{(H)}$ reaching 0.9 at H = 20. This further supports the notion that the discount rate component is more relevant in explaining long-run, rather than short-run, variation in the log dividend-price ratio.  
 As for the dividend growth component, $\beta_{dg}^{(H)}$ remains relatively flat, hovering around 0.2 before gradually converging to 0.1 at H = 20. While the log dividend-price ratio has some relationship with discounted future dividend growth, it is considerably weaker than its relationship with discounted future expected returns, especially in the long horizons. Indeed, this evidence is consistent with Cochrane's address to Stambaugh, stating that log dividend-price ratio's inability to forecast future dividend growth proves that stock returns are predictable. 
+
+\subsection*{1 (c)}
+Applying Equation 1.4 to a VAR(1) model, I constructed Figure 2 as below.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/1c.png}
+    \label{fig:q2}
+\end{figure}
+
+In particular, let $z_t = [dg_t, r_{e,t}, dp_t]$ follow $z_{t+1} = \Gamma_0 + \Gamma z_t + \varepsilon_{t+1}$ where $\varepsilon_{t+1} \overset{\mathrm{i.i.d.}}{\sim} (0,\Sigma)$. Running these overlapping annual regressions, I recover $\hat{\Gamma}$ in the form of $(z_t'z_t)^{-1}z_t'z_{t+1}$ to forecast three state variables in the future. Then, I regress $dg_t$, $re_t$, and $dp_t$ onto $dp_t$ using univariate full-sample OLS specifications to recover their coefficients in the form of the $b_z$ vector. As a result, I calculate the VAR-implied as follows:
+\begin{align}
+    b_{dg}^{(H)} &= -\mathbf{1}_{dg}' (\Gamma - \kappa^{H} \cdot \Gamma^{H+1}) (I - \kappa \cdot \Gamma)^{-1} b_z, \notag  \\
+    b_{re}^{(H)} &= \mathbf{1}_{re}' (\Gamma - \kappa^{H} \cdot \Gamma^{H+1}) (I - \kappa \cdot \Gamma)^{-1} b_z, \notag  \\
+    b_{dp}^{(H)} &= 1 - b_{dg}^{(H)} - b_{re}^{(H)} \notag 
+\end{align}
+
+
 \end{document}
