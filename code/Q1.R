@@ -38,7 +38,7 @@ for (H in seq_len(H_max)) {
   sum_dp <- kappa^H * dp[t_index + step_yr * H]
 
   b_re[H] <- unname(coef(lm(sum_re ~ dp_t))["dp_t"])
-  b_dg[H] <- unname(coef(lm(sum_dg ~ dp_t))["dp_t"])
+  b_dg[H] <- unname(coef(lm(-sum_dg ~ dp_t))["dp_t"])
   b_dp[H] <- unname(coef(lm(sum_dp ~ dp_t))["dp_t"])
 }
 
@@ -62,16 +62,37 @@ slope_plot <- ggplot(
   slope_plot_data,
   aes(x = H, y = slope, color = coefficient)
 ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(linewidth = 0.9) +
-  geom_point(size = 1.8) +
+  scale_color_manual(
+    values = c(
+        "b_re" = "red",
+        "b_dg" = "blue",
+        "b_dp" = "green"
+    ),
+    labels = c(
+        "b_re" = expression(beta[re]^{(H)}),
+        "b_dg" = expression(beta[dg]^{(H)}),
+        "b_dp" = expression(beta[dp]^{(H)})
+    ) 
+ )+
   scale_x_continuous(breaks = seq_len(H_max)) +
+  scale_y_continuous(breaks = seq(-0.3, 1.1, by = 0.2)) +
   labs(
     x = "Horizon H (years)",
     y = "OLS slope on dp_t",
-    color = "Slope",
-    title = "Long-horizon regression slopes"
+    color = NULL,
+    title = "Figure 1: Variance decomposition of dp_t"
   ) +
-  theme_minimal()
+  theme_classic() +
+    theme(
+        text = element_text(
+            family = "Times New Roman",
+            size = 14),
+        legend.position = c(0.20,0.80),
+        legend.text = element_text(size = 12),
+        plot.title = element_text(hjust = 0.5)
+    )
 
 dir.create("figures", showWarnings = FALSE, recursive = TRUE)
 ggsave(
