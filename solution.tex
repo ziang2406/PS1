@@ -121,7 +121,7 @@ Applying Equation 1.4 to a VAR(1) model, I constructed Figure 2 as below.
     \label{fig:q2}
 \end{figure}
 
-In particular, let $z_t = [dg_t, r_{e,t}, dp_t]$ follow $z_{t+1} = \Gamma_0 + \Gamma z_t + \varepsilon_{t+1}$ where $\varepsilon_{t+1} \overset{\mathrm{i.i.d.}}{\sim} (0,\Sigma)$. Running these overlapping annual regressions, I recover $\hat{\Gamma}$ in the form of $(z_t'z_t)^{-1}z_t'z_{t+1}$ to forecast three state variables in the future. Then, I regress $dg_t$, $re_t$, and $dp_t$ onto $dp_t$ using univariate full-sample OLS specifications to recover their coefficients in the form of the $b_z$ vector. As a result, I calculate the VAR-implied as follows:
+In particular, let $z_t = [dg_t, r_{e,t}, dp_t]$ follow $z_{t+1} = \Gamma_0 + \Gamma z_t + \varepsilon_{t+1}$ where $\varepsilon_{t+1} \overset{\mathrm{i.i.d.}}{\sim} (0,\Sigma)$. Running these overlapping annual regressions, I recover $\hat{\Gamma}$ in the form of $(z_t'z_t)^{-1}z_t'z_{t+1}$ to forecast three state variables in the future. Then, I regress $dg_t$, $re_t$, and $dp_t$ onto $dp_t$ using univariate full-sample OLS specifications to recover their coefficients in the form of the $b_z$ vector. As a result, I calculate the VAR-implied coefficients as follows:
 \begin{align}
     b_{dg}^{(H)} &= -\mathbf{1}_{dg}' (\Gamma - \kappa^{H} \cdot \Gamma^{H+1}) (I - \kappa \cdot \Gamma)^{-1} b_z, \notag  \\
     b_{re}^{(H)} &= \mathbf{1}_{re}' (\Gamma - \kappa^{H} \cdot \Gamma^{H+1}) (I - \kappa \cdot \Gamma)^{-1} b_z, \notag  \\
