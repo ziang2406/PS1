@@ -15,4 +15,4 @@ var_dp <- var(dp, na.rm = TRUE)
 kappa <- 1/(1+ exp(mean(dp)))
 
 #creating the main function for the loop 
-for 
+
