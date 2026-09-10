@@ -128,5 +128,22 @@ In particular, let $z_t = [dg_t, r_{e,t}, dp_t]$ follow $z_{t+1} = \Gamma_0 + \G
     b_{dp}^{(H)} &= 1 - b_{dg}^{(H)} - b_{re}^{(H)} \notag 
 \end{align}
 
+\subsection*{1 (d)}
+Using the same VAR process in equation (1.5) and taking H to $\infty$, the term $\kappa^{H} \cdot dp_{t+H}$ should go to 0 under the no-bubble condition. However, there is still a residual VAR-implied $b_{dp}^{\infty}$, albeit minor at 0.0011919. This could be attributed to the first-order specifications of the VAR process. Otherwise, the VAR-implied covariance coefficients for the discount rate and dividend growth components are as follows:
+\begin{table}[H]
+  \centering
+  \caption{VAR-implied infinite-horizon coefficients}
+  \label{tab:q1d}
+  \begin{tabular}{lr}
+    \toprule
+    Component & Coefficient \\
+    \midrule
+    $b_{re}^{(\infty)}$ & 0.489191 \\
+    $b_{dg}^{(\infty)}$ & 0.509617 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table 1 suggests that under the VAR(1) specifications, eventually both expected return and dividend growth equally contribute to the variation in the log dividend-price ratio in the extremely long run. 
 
 \end{document}
