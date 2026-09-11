@@ -109,3 +109,22 @@
 - **Substantive mathematical, economic, or empirical suggestions:** None. The existing handwritten reasoning was transcribed without checking, correcting, completing, or extending it.
 - **Type of assistance:** Formatting/translation.
 - **Grouped minor subsequent requests:** No as of initial close; any valid later continuation will be appended below.
+
+## TP interaction `1e-19849621f787` — `2026-09-10T21:14:04-04:00`
+
+- **Problem set item:** `1e`
+- **Substantive prompt (verbatim):**
+
+  ```text
+  Fix the formatting error in part 1 e to align the equations
+  ```
+
+- **Purpose:** Repair the LaTeX display-environment error in part 1e and consistently align its equations without changing their mathematical content.
+- **Git commit before interaction:** `19849621f787bb13a77fa4c8f8e9462bfee5bcb7`
+- **Assistance provided:** Preserved the user's current 1e source and PDF in the required before snapshot, reproduced the fatal LaTeX error, and traced it to the equation (1.5) block. Replaced the nested display-math plus `aligned` construction with one top-level `align` environment so the existing red equation tag is valid and the equations align at their existing relation markers. Added missing alignment anchors to the three unnumbered Taylor and approximation displays. An independent read-only audit confirmed that all part-1e display environments are now consistently anchored and that no mathematical content changed. Compiled twice to a temporary directory and twice to the repository, visually inspected the affected rendered page, regenerated `solution.pdf`, confirmed the repository PDF matches the verified temporary render, and ran the Git whitespace check.
+- **Files inspected:** `.agents/skills/tp/SKILL.md`; `.agents/skills/tp/references/course-ai-policy.md`; `.agents/skills/tp/scripts/snapshot.sh` (executed); `Problem Sets AI Policy[57].pdf` (existence verified); `AI_INTERACTIONS.md`; `solution.tex`; `solution.pdf`; `figures/1b_figure.png` and `figures/1c.png` (loaded during compilation).
+- **Files directly modified:** `solution.tex`; `solution.pdf` (regenerated from the corrected source); `AI_INTERACTIONS.md`.
+- **Errors, omissions, or ambiguities identified:** The preflight found uncommitted user changes to `solution.tex` and `solution.pdf`; they were directly related to item 1e and were preserved in the before snapshot. Compilation then failed with `Package amsmath Error: tag not allowed here` because `tag*` appeared inside `aligned`, nested within display-math delimiters. Three other part-1e `align` environments lacked explicit alignment anchors; these were corrected with `&=`. The final five-page build has no fatal, LaTeX/package, overfull, or underfull errors. One nonfatal duplicate `table.1` PDF-destination warning remains associated with the pre-existing item-1d table; it is outside this interaction's scope and does not affect part-1e equation alignment.
+- **Substantive mathematical, economic, or empirical suggestions:** None. Only LaTeX environments and alignment markers were changed.
+- **Type of assistance:** Formatting/translation.
+- **Grouped minor subsequent requests:** No as of initial close; any valid later continuation will be appended below.

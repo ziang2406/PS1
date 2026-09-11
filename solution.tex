@@ -173,8 +173,7 @@ Taking log of both sides, we have:
 \end{align}
 
 We also have:
-\[
-\begin{aligned}
+\begin{align}
     dy_t
     &= \log\left(1 + \frac{D_t}{P_t}\right)
     = \log\left(1 + \frac{e^{d_t}}{e^{p_t}}\right)
@@ -195,9 +194,7 @@ We also have:
     \Rightarrow\quad \log(1 - e^{-dy_t})
     &= dp_t - dy_t
     \tag*{\color{red}(1.5)}
-\end{aligned}
-\]
-
+\end{align}
 
 Rewriting Equation {\color{red}(1.4)} and plugging in Equation
 {\color{red}(1.5)}, we have:
@@ -222,7 +219,7 @@ Applying a first-order Taylor approximation to
 $\log(1-e^{-dy_t})$ around $\overline{dy}$, we have:
 \begin{align}
     \log(1-e^{-dy_t})
-    = f(dy_t)
+    &= f(dy_t)
     \approx f(\overline{dy})
     + f'(\overline{dy})(dy_t-\overline{dy}).
     \notag
@@ -244,7 +241,7 @@ Define $\kappa\equiv e^{-\overline{dy}}$. We have the following:
 As a result,
 \begin{align}
     f(dy_t)
-    = \log(1-\kappa)
+    &= \log(1-\kappa)
     + \frac{\kappa}{1-\kappa}(dy_t-\overline{dy}).
     \notag
 \end{align}
@@ -252,7 +249,7 @@ As a result,
 Similarly,
 \begin{align}
     f(dy_{t+1})
-    = \log(1-\kappa)
+    &= \log(1-\kappa)
     + \frac{\kappa}{1-\kappa}(dy_{t+1}-\overline{dy}).
     \notag
 \end{align}
