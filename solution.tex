@@ -173,7 +173,8 @@ Taking log of both sides, we have:
 \end{align}
 
 We also have:
-\begin{align}
+\[
+\begin{aligned}
     dy_t
     &= \log\left(1 + \frac{D_t}{P_t}\right)
     = \log\left(1 + \frac{e^{d_t}}{e^{p_t}}\right)
@@ -194,7 +195,9 @@ We also have:
     \Rightarrow\quad \log(1 - e^{-dy_t})
     &= dp_t - dy_t
     \tag*{\color{red}(1.5)}
-\end{align}
+\end{aligned}
+\]
+
 
 Rewriting Equation {\color{red}(1.4)} and plugging in Equation
 {\color{red}(1.5)}, we have:
@@ -225,7 +228,7 @@ $\log(1-e^{-dy_t})$ around $\overline{dy}$, we have:
     \notag
 \end{align}
 
-Define $\kappa\equiv e^{-\overline{dp}}$. We have the following:
+Define $\kappa\equiv e^{-\overline{dy}}$. We have the following:
 \begin{align}
     f(\overline{dy})
     &= \log(1-e^{-\overline{dy}})
