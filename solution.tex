@@ -148,4 +148,179 @@ Table 1 suggests that under the VAR(1) specifications, eventually both expected 
 
 \subsection*{1 (e)}
 
+\[
+    R_{e,t+1} = \frac{P_{t+1} + D_{t+1}}{P_t}.
+\]
+
+Taking log of both sides, we have:
+\begin{align}
+    r_{e,t+1}
+    &= \log(P_{t+1} + D_{t+1}) - p_t \notag \\
+    &= \log\left(
+        P_{t+1}
+        + \frac{P_{t+1} \cdot D_{t+1}}{P_{t+1}}
+    \right) - p_t \notag \\
+    &= \log\left(
+        P_{t+1}
+        \left(1 + \frac{D_{t+1}}{P_{t+1}}\right)
+    \right) - p_t \notag \\
+    &= p_{t+1}
+    + \underbrace{
+        \log\left(1 + \frac{D_{t+1}}{P_{t+1}}\right)
+    }_{\equiv\,dy_{t+1}}
+    - p_t
+    \tag*{\color{red}(1.4)}
+\end{align}
+
+We also have:
+\begin{align}
+    dy_t
+    &= \log\left(1 + \frac{D_t}{P_t}\right)
+    = \log\left(1 + \frac{e^{d_t}}{e^{p_t}}\right)
+    = \log(1 + e^{dp_t}) \notag \\
+    \Rightarrow\quad -dy_t
+    &= -\log(1 + e^{dp_t})
+    = \log(1 + e^{dp_t})^{-1} \notag \\
+    \Rightarrow\quad e^{-dy_t}
+    &= e^{\log(1 + e^{dp_t})^{-1}}
+    = \frac{1}{1 + e^{dp_t}} \notag \\
+    \Rightarrow\quad \frac{1}{e^{-dy_t}} - 1
+    &= e^{dp_t} \notag \\
+    \Rightarrow\quad
+    \frac{1 - e^{-dy_t}}{e^{-dy_t}}
+    &= e^{dp_t} \notag \\
+    \Rightarrow\quad 1 - e^{-dy_t}
+    &= e^{dp_t} \cdot e^{-dy_t} \notag \\
+    \Rightarrow\quad \log(1 - e^{-dy_t})
+    &= dp_t - dy_t
+    \tag*{\color{red}(1.5)}
+\end{align}
+
+Rewriting Equation {\color{red}(1.4)} and plugging in Equation
+{\color{red}(1.5)}, we have:
+\begin{align}
+    r_{e,t+1} - (d_{t+1} - d_t)
+    &= (d_t - p_t)
+    - (d_{t+1} - p_{t+1})
+    + dy_{t+1} \notag \\
+    \Rightarrow\quad
+    r_{e,t+1} - \Delta d_{t+1}
+    &= dp_t - dp_{t+1} + dy_{t+1} \notag \\
+    &= (dp_t - dy_t)
+    - (dp_{t+1} - dy_{t+1})
+    + dy_t \notag \\
+    &= \log(1 - e^{-dy_t})
+    - \log(1 - e^{-dy_{t+1}})
+    + dy_t
+    \tag*{\color{red}(1.6)}
+\end{align}
+
+Applying a first-order Taylor approximation to
+$\log(1-e^{-dy_t})$ around $\overline{dy}$, we have:
+\begin{align}
+    \log(1-e^{-dy_t})
+    = f(dy_t)
+    \approx f(\overline{dy})
+    + f'(\overline{dy})(dy_t-\overline{dy}).
+    \notag
+\end{align}
+
+Define $\kappa\equiv e^{-\overline{dp}}$. We have the following:
+\begin{align}
+    f(\overline{dy})
+    &= \log(1-e^{-\overline{dy}})
+    = \log(1-\kappa), \notag \\
+    f'(\overline{dy})
+    &= \frac{1}{1-e^{-\overline{dy}}}
+    \cdot e^{-\overline{dy}}
+    = \frac{e^{-\overline{dy}}}{1-e^{-\overline{dy}}}
+    = \frac{\kappa}{1-\kappa}.
+    \notag
+\end{align}
+
+As a result,
+\begin{align}
+    f(dy_t)
+    = \log(1-\kappa)
+    + \frac{\kappa}{1-\kappa}(dy_t-\overline{dy}).
+    \notag
+\end{align}
+
+Similarly,
+\begin{align}
+    f(dy_{t+1})
+    = \log(1-\kappa)
+    + \frac{\kappa}{1-\kappa}(dy_{t+1}-\overline{dy}).
+    \notag
+\end{align}
+
+Plugging these two equations into Equation {\color{red}(1.6)}, we have:
+\begin{align}
+    \Rightarrow\quad
+    r_{e,t+1}-\Delta d_{t+1}
+    &= \log(1-\kappa)
+    + \frac{\kappa}{1-\kappa}(dy_t-\overline{dy})
+    - \log(1-\kappa)
+    - \frac{\kappa}{1-\kappa}(dy_{t+1}-\overline{dy})
+    + dy_t \notag \\
+    &= \frac{\kappa}{1-\kappa}(dy_t-dy_{t+1})+dy_t
+    \notag \\
+    &= \frac{\kappa+1-\kappa}{1-\kappa}dy_t
+    - \frac{\kappa}{1-\kappa}dy_{t+1} \notag \\
+    &= \frac{1}{1-\kappa}dy_t
+    - \frac{\kappa}{1-\kappa}dy_{t+1} \notag \\
+    &= \frac{dy_t-\kappa dy_{t+1}}{1-\kappa}.
+    \notag
+\end{align}
+
+\begin{align}
+    \Rightarrow\quad dy_t
+    &= (1-\kappa)(r_{e,t+1}-\Delta d_{t+1})
+    + \kappa dy_{t+1}.
+    \notag
+\end{align}
+
+Recursively substituting $dy_{t+h}$, we have:
+\begin{align}
+    dy_t
+    &= (1-\kappa)\cdot
+    \left[
+        \sum_{h=1}^{H}\kappa^{h-1}\cdot r_{e,t+h}
+        - \sum_{h=1}^{H}\kappa^{h-1}\cdot\Delta d_{t+h}
+    \right]
+    + \kappa^H\cdot dy_{t+H}
+    \tag*{\color{red}(1.7)}
+\end{align}
+
+Taking the conditional expectation of both sides and assuming that
+$\mathbb{E}_t[X]=X$, we have:
+\begin{align}
+    dy_t
+    &= (1-\kappa)\cdot
+    \left[
+        \sum_{h=1}^{H}\kappa^{h-1}
+        \cdot\mathbb{E}_t[r_{e,t+h}]
+        - \sum_{h=1}^{H}\kappa^{h-1}
+        \cdot\mathbb{E}_t[\Delta d_{t+h}]
+    \right]
+    + \kappa^H\cdot dy_{t+H}
+    \tag*{\color{red}(1.8)}
+\end{align}
+
+Knowing that $0<\kappa<1$ by construction and assuming that the
+no-bubble condition holds such that
+$\lim_{H\to\infty}\kappa^H\cdot dy_{t+H}=0$, we let
+$H\to\infty$ in Equation {\color{red}(1.8)} and have:
+\begin{align}
+    dy_t
+    &= (1-\kappa)
+    \left[
+        \sum_{h=1}^{\infty}\kappa^{h-1}
+        \cdot\mathbb{E}_t[r_{e,t+h}]
+        - \sum_{h=1}^{\infty}\kappa^{h-1}
+        \cdot\mathbb{E}_t[\Delta d_{t+h}]
+    \right]
+    \tag*{\color{red}(1.9)}
+\end{align}
+
 \end{document}
