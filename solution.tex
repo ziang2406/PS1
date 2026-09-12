@@ -354,6 +354,39 @@ Running OLS regressions of average excess return on dividend-price ratio present
 
 For the first few horizons, $R_{adj}^{2}$ remained low around 0.2, suggesting the dividend-price ratio's weak ability to predict average excess return in the short run. However, as the horizons extend, $R_{adj}^{2}$ gradually improves and reaches a peak of approximately 0.45 at H = 14. This means that over the longer horizon, current dividend-price ratio explains about 45\% of the variation in the long-run average excess return, rendering this independent variable relevant in predicting long-term return. 
 
+\subsection*{2 (b)}
 
+I estimated the one-year OLS regression of excess return on current dividend-price ratio and retrieved the fixed estimated $\hat{b}$ and $\hat{e}$: 
+\begin{align*}
+xR_{e,t+1} &= a + b \cdot D_{t}/P_{t} + e_{t} 
+\end{align*}
+
+For each estimator, I calculated a corresponding spectral density matrix $\hat{S}$ before feeding it into the following sandwich covariance matrix estimator: 
+\begin{align*}
+\widehat{\operatorname{Avar}}(\hat{\theta})
+= \frac{1}{T} 
+Q^{-1}\widehat{S}Q^{-1}, 
+\qquad Q= \frac{1}{T}X'X
+\end{align*}
+
+Taking square root of the diagonal entries of the coefficient covariance matrix, I derive the following table: 
+\begin{table}[H]
+  \centering
+  \caption{Predictive-regression coefficient estimates and standard errors}
+  \label{tab:q2b}
+  \begin{tabular}{lrrr}
+    \toprule
+    Method & $\hat{b}$ & Std. Error & $t$-stat \\
+    \midrule
+    OLS & 2.8038 & 0.3802 & 7.3754 \\
+    White (1980) & 2.8038 & 0.6587 & 4.2569 \\
+    Newey--West (1987), 11 lags & 2.8038 & 1.2990 & 2.1584 \\
+    Hansen--Hodrick (1980), 11 lags & 2.8038 & 1.4537 & 1.9287 \\
+    Newey--West (1987, 1994), automatic (22 lags) & 2.8038 & 1.2523 & 2.2390 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+As the estimate accounts for both heteroskedasticity and autocorrelation, the standard error becomes larger and the t-stat declines. 
 
 \end{document}
