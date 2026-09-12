@@ -82,7 +82,7 @@ adjusted_r_squared_plot <- ggplot(
   labs(
     x = "Horizon H (years)",
     y = "Adjusted R-squared",
-    title = "Figure 3: Adjusted R-squared by horizon"
+    title = "Figure 3: Adjusted R-squared of average excess return on dp by horizon"
   ) +
   theme_classic() +
   theme(
