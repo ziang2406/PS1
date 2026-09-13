@@ -50,6 +50,8 @@ slope_results <- tibble(
   b_dp = b_dp
 )
 
+write_csv(slope_results, "code/1b.csv")
+
 # Convert the results to long form for plotting
 slope_plot_data <- slope_results |>
   pivot_longer(
