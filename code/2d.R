@@ -204,7 +204,7 @@ forecast_plot_data <- forecast_results |>
 forecast_date_breaks <- seq.Date(
   as.Date("1940-12-01"),
   as.Date("2020-12-01"),
-  by = "10 years"
+  by = "5 years"
 )
 
 forecast_plot <- ggplot(
@@ -221,11 +221,12 @@ forecast_plot <- ggplot(
     )
   ) +
   scale_x_date(breaks = forecast_date_breaks, date_labels = "%Y") +
+  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) + 
   labs(
-    x = "Forecast target date",
-    y = "Expected excess return",
+    x = "",
+    y = "",
     color = NULL,
-    title = "Figure 4: Historical mean and excess-return forecasts"
+    title = "Figure 4: Time series of sample mean, IS and OS estimates for xR"
   ) +
   theme_classic() +
   theme(
@@ -247,8 +248,9 @@ rolling_plot <- ggplot(
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(color = "red", linewidth = 0.9) +
   scale_x_date(breaks = rolling_date_breaks, date_labels = "%Y") +
+  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) + 
   labs(
-    x = "Rolling-window end date",
+    x = "Years",
     y = expression(R[OS]^2),
     title = "Figure 5: Rolling 50-year out-of-sample R-squared"
   ) +
