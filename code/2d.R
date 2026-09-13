@@ -129,16 +129,30 @@ R_OS_squared <- 1 - SSE_OS / SSE_historical_mean
 # Rolling R_OS^2. The prompt explicitly makes both endpoints inclusive, so
 # January 1941 through December 1990 contains 50 * 12 observations.
 rolling_window_observations <- 50L * 12L
+first_rolling_start_position <- which(
+  forecast_results$target_date == as.Date("1941-01-01")
+)
 first_rolling_end_position <- which(
   forecast_results$target_date == as.Date("1990-12-01")
 )
 
-stopifnot(length(first_rolling_end_position) == 1L)
+stopifnot(
+  length(first_rolling_start_position) == 1L,
+  length(first_rolling_end_position) == 1L,
+  first_rolling_end_position - first_rolling_start_position + 1L ==
+    rolling_window_observations
+)
 rolling_end_position <- seq.int(
-  from = first_rolling_end_position, 
+  from = first_rolling_end_position,
   to = n_forecasts
 )
 rolling_start_position <- rolling_end_position - rolling_window_observations + 1L
+
+stopifnot(
+  rolling_start_position[1] == first_rolling_start_position,
+  all(diff(rolling_start_position) == 1L),
+  all(diff(rolling_end_position) == 1L)
+)
 
 rolling_R_OS_squared <- vapply(
   seq_along(rolling_end_position),
@@ -228,7 +242,7 @@ forecast_plot <- ggplot(
     )
   ) +
   scale_x_date(breaks = forecast_date_breaks, date_labels = "%Y") +
-  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) + 
+  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) +
   labs(
     x = "",
     y = "",
@@ -255,7 +269,7 @@ rolling_plot <- ggplot(
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(color = "red", linewidth = 0.9) +
   scale_x_date(breaks = rolling_date_breaks, date_labels = "%Y") +
-  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) + 
+  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) +
   labs(
     x = "Years",
     y = expression(R[OS]^2),
