@@ -20,7 +20,6 @@
 \date{\today}
 
 \begin{document}
-\raggedright
 \maketitle
 \section*{Problem 1}
 \subsection*{1 (a)}
@@ -388,5 +387,17 @@ Taking square root of the diagonal entries of the coefficient covariance matrix,
 \end{table}
 
 As the estimate accounts for both heteroskedasticity and autocorrelation, the standard error becomes larger and the t-stat declines. 
+
+\subsection*{2 (c)} 
+The Amihud and Hurvich (2004) correction responds to Stambaugh's concern for bias in the coefficient estimate due to the persistent nature of the predictor, or $\frac{D_t}{P_t}$ in this case. Indeed, estimating the AR(1) regression of $D_{t+1}/P_{t+1}$ on $D_t/P_t$  such that $D_{t+1}/ P_{t+1} = \theta + \phi \cdot D_t/P_t + u_{t+1} $, I retrieved $\hat{\phi} = 0.7197$, suggesting that shocks to dividend-price ratio disappear verly slowly. Given our finite sample, the OLS estimate of the persistence coefficient tends to be biased downward so that $\mathbb{E}_t[\hat{\phi} - \phi ] < 0$. As a result, a downwardly biased $\hat{\phi}$ also leads to an upward bias in $\hat{b}$ via a negative covariance between shocks to return ($e_{t+1}$) and shocks to predictor ($u_{t+1}$). In order to correct the OLS's overstated return predictability, I re-estimate the slope coefficient using the Amihud and Hurvich (2004) correction as follows: 
+\begin{enumerate}
+    \item Step 1: Convert the dataset from months into corresponding T years. Construct the the bias-corrected slope estimate $\hat{\phi}^{c} = \hat{\phi} + (1/T) \cdot (1+ 3 \cdot \hat{\phi}) + (1/T^2) \cdot 3 \cdot (1+ 3 \cdot \hat{\phi})$. 
+    \item Step 2: Subbing $\hat{\phi}^{c}$ into the AR(1) process, I calculate the bias-corrected residual estimate: $\hat{u}_{t+1}^{c} = D_{t+1}/ P_{t+1} - (\hat{\theta} +  \hat{\phi}^{c} \cdot D_t/P_t)$. 
+    \item Step 3: I plug the updated AR(1) regression in place of $D_t/P_t$ into Equation (2.2) in part (b) and retrieve a new $\hat{b}_{AH}$: $xR_{e,t+1} = a + b_{AH} \cdot D_t/P_t + b_{u} \cdot \hat{u}_{t+1}^{c} + e_{t+1}$. 
+\end{enumerate}
+
+The slope estimates for the conventional OLS and Amihud and Hurvich are $\hat{b}$ = 2.8038 and $\hat{b}_{AH}$ = 2.3366 respectively. This empirical result is in line with the small sample bias discussion above, proving that the corrected $\hat{u}_{t+1}^{c}$ controls for the contemporaneous correlation between the return and dividend-price ratio innovations and shrinks the inflated slope coefficient.
+ 
+
 
 \end{document}
