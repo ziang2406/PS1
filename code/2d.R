@@ -127,10 +127,17 @@ stopifnot(SSE_historical_mean > 0)
 R_OS_squared <- 1 - SSE_OS / SSE_historical_mean
 
 # Rolling R_OS^2. The prompt explicitly makes both endpoints inclusive, so
-# December 1940 through December 1990 contains 50 * 12 + 1 observations.
-rolling_span_months <- 50L * 12L
-rolling_window_observations <- rolling_span_months + 1L
-rolling_end_position <- seq.int(rolling_window_observations, n_forecasts)
+# January 1941 through December 1990 contains 50 * 12 observations.
+rolling_window_observations <- 50L * 12L
+first_rolling_end_position <- which(
+  forecast_results$target_date == as.Date("1990-12-01")
+)
+
+stopifnot(length(first_rolling_end_position) == 1L)
+rolling_end_position <- seq.int(
+  from = first_rolling_end_position, 
+  to = n_forecasts
+)
 rolling_start_position <- rolling_end_position - rolling_window_observations + 1L
 
 rolling_R_OS_squared <- vapply(
@@ -162,11 +169,11 @@ rolling_results <- tibble(
 stopifnot(
   nrow(rolling_results) == 373L,
   all(is.finite(rolling_results$rolling_R_OS_squared)),
-  rolling_results$window_start_date[1] == as.Date("1940-12-01"),
+  rolling_results$window_start_date[1] == as.Date("1941-01-01"),
   rolling_results$window_end_date[1] == as.Date("1990-12-01"),
   rolling_results$window_end_date[nrow(rolling_results)] ==
     as.Date("2021-12-01"),
-  all(rolling_results$window_observations == 601L),
+  all(rolling_results$window_observations == 600L),
   abs(R_OS_squared - (-0.006109063071491)) < 1e-12
 )
 
@@ -256,9 +263,13 @@ rolling_plot <- ggplot(
   ) +
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),
-    plot.title = element_text(hjust = 0.5)
-  )
+    text = element_text(family = "Times New Roman", size = 14
+    ),
+    plot.title = element_text(hjust = 0.5
+    ),
+    panel.grid.major = element_line(color="gray85",linewidth=0.5
+    ),
+    panel.grid.minor = element_blank())
 
 dir.create("figures", showWarnings = FALSE, recursive = TRUE)
 ggsave(
