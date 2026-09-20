@@ -399,6 +399,44 @@ The Amihud and Hurvich (2004) correction responds to Stambaugh's concern for bia
 The slope estimates for the conventional OLS and Amihud and Hurvich are $\hat{b}$ = 2.8038 and $\hat{b}_{AH}$ = 2.3366 respectively. This empirical result is in line with the small sample bias discussion above, proving that the corrected $\hat{u}_{t+1}^{c}$ controls for the contemporaneous correlation between the return and dividend-price ratio innovations and shrinks the inflated slope coefficient.
 
 \subsection*{2 (d)} 
+The in-sample OLS forecast uses the full-sample data following Equation 2.2 to derive in-sample fitted values $\hat{E}_{t}^{IS}[{xR}_{e}]$. The out-of-sample OLS uses an expanding window with first forecast using the dividend-price ratio from December 1927 to November 1939 and excess return from December 1928 to November 1940 to fit $xR_{e,t+1} =  a_{t}^{OS} + b_{t}^{OS} \cdot D_t/P_t + e_{t+1}$ and retrieve out-of-sample fitted values $\hat{E}_{t}^{OS}[{xR}_{e}]$. The average historical expanding-window excess return $\overline{xR}_{e,t}$ is calculated as the sample mean during the same period. 
+Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}_{OS}$ as follows:
+\[
+    R^{2}_{OS}
+    = 1 - 
+    \frac{
+    \displaystyle\sum_{t=1}^{T}
+    \left( 
+    xR_{e,t+1} - 
+    \widehat{E}_t^{OS}\left[ xR_{e,t}\right]
+    \right)^2
+    }{
+    \displaystyle\sum_{t=1}^{T} 
+    \left(
+    xR_{e,t+1} - 
+    \frac{1}{T}\sum_{j=1}^{T} xR_{e,j+1}
+    \right)^2
+    }
+    = 0.001824
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/2d_1.png}
+    \label{fig:q4}
+\end{figure}
+
+The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting errors from the OS OLS estimation with the first window covering January 1941 to December 1990. As observed from the plot below, the predictability power of the model severly declines around 2000 and beyond 2005. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/2d_2.png}
+    \label{fig:q5}
+\end{figure}
+
+
+    
+    
+
 
 
 \end{document}

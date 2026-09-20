@@ -228,14 +228,10 @@ forecast_plot_data <- forecast_results |>
         "historical_mean",
         "in_sample_forecast",
         "out_of_sample_forecast"
-      ),
-      labels = c(
-        "Historical mean",
-        "In-sample fitted value",
-        "Out-of-sample forecast"
       )
     )
   )
+
 
 forecast_date_breaks <- seq.Date(
   as.Date("1940-12-01"),
@@ -251,9 +247,19 @@ forecast_plot <- ggplot(
   geom_line(linewidth = 0.7) +
   scale_color_manual(
     values = c(
-      "Historical mean" = "green",
-      "In-sample fitted value" = "blue",
-      "Out-of-sample forecast" = "red"
+      "historical_mean" = "green",
+      "in_sample_forecast" = "blue",
+      "out_of_sample_forecast" = "red"
+    ),
+     breaks = c(
+      "historical_mean",
+      "in_sample_forecast",
+      "out_of_sample_forecast"
+    ),
+    labels = expression(
+      bar(xR)[e,t],
+      {hat(E)[t]^{IS}} ~ (xR[e,t+1]), 
+      {hat(E)[t]^{OS}} ~ (xR[e,t+1])
     )
   ) +
   scale_x_date(breaks = forecast_date_breaks, date_labels = "%Y") +
@@ -296,7 +302,7 @@ rolling_plot <- ggplot(
     ),
     plot.title = element_text(hjust = 0.5
     ),
-    panel.grid.major = element_line(color="gray85",linewidth=0.5
+    panel.grid.major = element_line(color = "gray85", linewidth=0.5
     ),
     panel.grid.minor = element_blank())
 
