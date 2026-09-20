@@ -55,7 +55,11 @@ stopifnot(
   dates[origin_index[1]] == as.Date("1939-12-01"),
   dates[target_index[1]] == as.Date("1940-12-01"),
   dates[target_index[n_forecasts]] == as.Date("2021-12-01"),
-  all(target_index - origin_index == step_yr)
+  all(target_index - origin_index == step_yr),
+  dates[1L] == as.Date("1927-12-01"),
+  dates[first_origin_index - 1L] == as.Date("1939-11-01"),
+  dates[1L + step_yr] == as.Date("1928-12-01"),
+  dates[first_origin_index - 1L + step_yr] == as.Date("1940-11-01")
 )
 
 a_OS <- numeric(n_forecasts)
@@ -69,8 +73,10 @@ training_observations <- integer(n_forecasts)
 for (forecast_number in seq_len(n_forecasts)) {
   current_origin <- origin_index[forecast_number]
 
-  # Use only completed pairs whose annual-ahead outcome is known by the origin.
-  training_start_index <- seq_len(current_origin - step_yr)
+  # Follow the prompt's literal calendar ranges. The first expanding sample uses
+  # D/P from December 1927-November 1939 and returns from December 1928-November
+  # 1940, for 144 observations.
+  training_start_index <- seq_len(current_origin - 1L)
   training_target_index <- training_start_index + step_yr
 
   training_sample <- tibble(
@@ -106,9 +112,11 @@ forecast_results <- tibble(
 stopifnot(
   nrow(forecast_results) == 973L,
   all(is.finite(unlist(forecast_results[, 3:9]))),
-  identical(training_observations, 133:1105),
+  identical(training_observations, 144:1116),
   abs(a_IS - (-0.031410878888682)) < 1e-12,
-  abs(b_IS - 2.803802742996315) < 1e-12
+  abs(b_IS - 2.803802742996315) < 1e-12,
+  abs(a_OS[1] - (-0.255095752576507)) < 1e-12,
+  abs(b_OS[1] - 6.020544226301281) < 1e-12
 )
 
 dir.create("code", showWarnings = FALSE, recursive = TRUE)
@@ -117,14 +125,15 @@ write_csv(forecast_results, "code/2d_1.csv")
 # Full-period out-of-sample R-squared
 os_squared_errors <-
   (forecast_results$xR_e_t_plus_1 - forecast_results$out_of_sample_forecast)^2
-historical_mean_squared_errors <-
-  (forecast_results$xR_e_t_plus_1 - forecast_results$historical_mean)^2
+full_period_mean <- mean(forecast_results$xR_e_t_plus_1)
+full_period_mean_squared_errors <-
+  (forecast_results$xR_e_t_plus_1 - full_period_mean)^2
 
 SSE_OS <- sum(os_squared_errors)
-SSE_historical_mean <- sum(historical_mean_squared_errors)
-stopifnot(SSE_historical_mean > 0)
+SSE_full_period_mean <- sum(full_period_mean_squared_errors)
+stopifnot(SSE_full_period_mean > 0)
 
-R_OS_squared <- 1 - SSE_OS / SSE_historical_mean
+R_OS_squared <- 1 - SSE_OS / SSE_full_period_mean
 
 # Rolling R_OS^2. The prompt explicitly makes both endpoints inclusive, so
 # January 1941 through December 1990 contains 50 * 12 observations.
@@ -163,12 +172,15 @@ rolling_R_OS_squared <- vapply(
     )
 
     window_SSE_OS <- sum(os_squared_errors[window_index])
-    window_SSE_historical_mean <- sum(
-      historical_mean_squared_errors[window_index]
+    window_realized_excess_return <-
+      forecast_results$xR_e_t_plus_1[window_index]
+    window_mean <- mean(window_realized_excess_return)
+    window_SSE_mean <- sum(
+      (window_realized_excess_return - window_mean)^2
     )
 
-    stopifnot(window_SSE_historical_mean > 0)
-    1 - window_SSE_OS / window_SSE_historical_mean
+    stopifnot(window_SSE_mean > 0)
+    1 - window_SSE_OS / window_SSE_mean
   },
   numeric(1)
 )
@@ -188,7 +200,10 @@ stopifnot(
   rolling_results$window_end_date[nrow(rolling_results)] ==
     as.Date("2021-12-01"),
   all(rolling_results$window_observations == 600L),
-  abs(R_OS_squared - (-0.006109063071491)) < 1e-12
+  abs(R_OS_squared - 0.001824671067032102) < 1e-12,
+  abs(rolling_R_OS_squared[1] - 0.15801988688705626) < 1e-12,
+  abs(rolling_R_OS_squared[length(rolling_R_OS_squared)] -
+    (-0.060420959660509865)) < 1e-12
 )
 
 write_csv(rolling_results, "code/2d_2.csv")
@@ -269,7 +284,7 @@ rolling_plot <- ggplot(
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(color = "red", linewidth = 0.9) +
   scale_x_date(breaks = rolling_date_breaks, date_labels = "%Y") +
-  scale_y_continuous(breaks = seq(-0.05, 0.3, by = 0.05)) +
+  scale_y_continuous(breaks = seq(-0.10, 0.20, by = 0.05)) +
   labs(
     x = "Years",
     y = expression(R[OS]^2),
@@ -303,20 +318,36 @@ ggsave(
   bg = "white"
 )
 
-diagnostics <- tibble(
+summary_results <- tibble(
   in_sample_observations = nobs(in_sample_model),
   out_of_sample_forecasts = n_forecasts,
+  first_forecast_target_date = forecast_results$target_date[1],
+  last_forecast_target_date = forecast_results$target_date[n_forecasts],
   first_training_observations = training_observations[1],
   last_training_observations = training_observations[n_forecasts],
   a_IS = a_IS,
   b_IS = b_IS,
+  full_period_mean = full_period_mean,
   SSE_OS = SSE_OS,
-  SSE_historical_mean = SSE_historical_mean,
+  SSE_full_period_mean = SSE_full_period_mean,
   R_OS_squared = R_OS_squared,
   rolling_window_observations = rolling_window_observations,
-  rolling_estimates = nrow(rolling_results)
+  rolling_estimates = nrow(rolling_results),
+  first_rolling_window_start_date = rolling_results$window_start_date[1],
+  first_rolling_window_end_date = rolling_results$window_end_date[1],
+  last_rolling_window_start_date =
+    rolling_results$window_start_date[nrow(rolling_results)],
+  last_rolling_window_end_date =
+    rolling_results$window_end_date[nrow(rolling_results)],
+  first_rolling_R_OS_squared = rolling_R_OS_squared[1],
+  last_rolling_R_OS_squared =
+    rolling_R_OS_squared[length(rolling_R_OS_squared)],
+  minimum_rolling_R_OS_squared = min(rolling_R_OS_squared),
+  maximum_rolling_R_OS_squared = max(rolling_R_OS_squared)
 )
 
-print(diagnostics, width = Inf)
+write_csv(summary_results, "code/2d_summary.csv")
+
+print(summary_results, width = Inf)
 print(head(forecast_results))
 print(head(rolling_results))
