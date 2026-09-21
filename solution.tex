@@ -492,6 +492,27 @@ By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking 
   \end{tabular}
 \end{table}
 
+\subsection*{4 (b)} 
+For $H = 2,\ldots,5$, I estimate the OLS regression of excess returns on excess log yield as follows: 
+\[
+    (1/H) \cdot xr_{t \to t+H}^{H} = a^{H} + b^{H} \cdot xy_{t}^{H} + e_{t}^{H}
+\]
 
+where the hold-to-maturity excess return is $xr_{t \to t+H}^{H} = \sum_{h=1}^{H} xr_{t+h}^{(H-h+1)}$. Using a common set of 811-month sample from June 1952 to December 2019 and the Hansen-Hodrick standard errors with $L = Overlap = 12H-1$, I derive the estimated $b^{H}$, t-stat, and $R^2$ for each maturity as follows: 
+\begin{table}[H]
+  \centering
+  \caption{Predictive regressions for hold-to-maturity excess bond returns}
+  \label{tab:q4b}
+  \begin{tabular}{crrr}
+    \toprule
+    $H$ & $\hat{b}^{(H)}$ & Hansen--Hodrick $t$-stat & $R^2$ \\
+    \midrule
+    2 & 0.6931 & 3.4373 & 0.0809 \\
+    3 & 0.5201 & 2.9989 & 0.0543 \\
+    4 & 0.3935 & 2.2761 & 0.0379 \\
+    5 & 0.3140 & 2.0716 & 0.0281 \\
+    \bottomrule
+  \end{tabular}
+\end{table} 
 
 \end{document}
