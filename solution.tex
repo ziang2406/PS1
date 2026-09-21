@@ -462,6 +462,35 @@ $R^{2}_{OS2}$, using the same formula as question 2d, is 0.001978 with the 50-ye
 
 Given these results, we can clearly see that the steady state constraint has slightly improved the out-of-sample $R^2$ $(0.001978 > 0.001824)$. Looking over the horizons, the rolling $R^2$ using the fixed coefficient constraint also never dipped below 0, suggesting that imposing restrictions from steady-state valuation model can improve OS predictability. This makes sense as less estimation errors come at the expense of less flexibility in estimating regression coefficients. This conclusion is consistent with the view of Campbell \& Thompson (2008). 
     
+\section*{Problem 3}
+\subsection*{3 (a)} 
+
+\section*{Problem 4}
+\subsection*{4 (a)} 
+I select Fama-Bliss discount bonds with maturities of 1-5 years by first, filtering those with KYTREASNOX from 2000047 to 2000051 and, second, verifying the mapping with 5 unique combinations of KYTREASNOX and TTERMLBL. Obtaining the decimal yield by dividing TMYTM by 100, I calculate the following: 
+\begin{enumerate}
+    \item For $H = 1,\ldots,5$, log yield $y_t^{H} = log(1+Y_t^{H})$
+    \item For $H = 2,\ldots,5$, log forward rate $f_t^{H} = H \cdot y_t^{H} - (H-1) \cdot y_t^{H-1}$ with $f_t^{1} = y_t^{1}$
+    \item For $H = 2,\ldots,5$, log annual return $r_t^{H} = H \cdot y_{t-1}^{H} - (H-1) \cdot y_t^{H-1}$, with $r_t^{1} = y_{t-1}^{1}$, where $y_{t-1}^{1}$ is the 12-month lag of $y_t^{1}$.
+\end{enumerate}
+
+By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking their averages across H = 2,...,5, I have the following table: 
+
+\begin{table}[H]
+  \centering
+  \caption{Average excess bond yields, forward rates, and annual returns}
+  \label{tab:q4a}
+  \begin{tabular}{crrr}
+    \toprule
+    $H$ & $\overline{xy}_{t}^{(H)}$ & $\overline{xf}_{t}^{(H)}$ & $\overline{xr}_{t}^{(H)}$ \\
+    \midrule
+    2 & 0.001686 & 0.003372 & 0.003154 \\
+    3 & 0.003278 & 0.006461 & 0.006069 \\
+    4 & 0.004660 & 0.008805 & 0.008198 \\
+    5 & 0.005639 & 0.009557 & 0.008719 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 
 
