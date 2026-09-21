@@ -42,8 +42,15 @@ ar_model <- lm(
 theta_hat <- unname(coef(ar_model)[["(Intercept)"]])
 phi_hat <- unname(coef(ar_model)[["dividend_price_ratio"]])
 
-# Convert the full monthly sample length to years as specified in prompt/2c.md.
-T_years <- nrow(EQ) / 12
+# Use the 95 distinct calendar years specified in the updated prompt/2c.md.
+calendar_years <- sort(unique(EQ$YEAR))
+T_years <- 95L
+
+stopifnot(
+  length(calendar_years) == T_years,
+  all(diff(calendar_years) == 1L)
+)
+
 phi_corrected <- phi_hat +
   (1 / T_years) * (1 + 3 * phi_hat) +
   (3 / T_years^2) * (1 + 3 * phi_hat)
@@ -68,7 +75,7 @@ stopifnot(
   nobs(ah_model) == 1117L,
   qr(model.matrix(ar_model))$rank == 2L,
   qr(model.matrix(ah_model))$rank == 3L,
-  isTRUE(all.equal(T_years, 1129 / 12, tolerance = 1e-15)),
+  T_years == 95L,
   all(is.finite(c(
     theta_hat,
     phi_hat,
