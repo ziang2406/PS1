@@ -433,8 +433,34 @@ The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting err
     \label{fig:q5}
 \end{figure}
 
+\subsection*{2 (e)} 
+I keep the same $\hat{E}_{t}^{IS}[{xR}_{e}]$ and $\overline{xR}_{e,t}$ as constructed in question 2d. For the out-of-sample estimation, assuming that dividend growth is unexpected and expected return is 100\% persistent, Equation 1.9 implies:
+\[
+    log(1+ D_t/P_t) 
+    = \mathbb{E}_{t} [r_e] - g
+\]
 
-    
+where $\mathbb{E}_{t} [\Delta d_{t+h}] = g$ and $\mathbb{E}_{t} [\Delta r_{e,t+h}] = \mathbb{E}_{t} [r_e]$. Assuming 0\% real interest rate, $e^{rf} = 1$. Let $G_t = exp(g)$. Taking the exponent of both sides and subtracting $e^{rf}$, we have: 
+\[
+    xR_{e,t+1}
+    = (G_t - 1) + G_t \cdot D_t/P_t
+\]
+
+Applying the steady state implied coefficients, I set $ \hat{a} = \bar{G_t} -1$ and $ \hat{b} = \bar{G_t}$ such that $\bar{G_t}$ is the average $e^{\Delta d}$ over the expanding window period (starting from December 1927), I estimate $\hat{E}_{t}^{OS2}[{xR}_{e}]$ and retrieve the following figure. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/2e_1.png}
+    \label{fig:q6}
+\end{figure}
+
+$R^{2}_{OS2}$, using the same formula as question 2d, is 0.001978 with the 50-year rolling $R^{2}_{OS2}$ time series as follows: 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/2e_2.png}
+    \label{fig:q7}
+\end{figure}
+
+Given these results, we can clearly see that the steady state constraint has slightly improved the out-of-sample $R^2$ $(0.001978 > 0.001824)$. Looking over the horizons, the rolling $R^2$ using the fixed coefficient constraint also never dipped below 0, suggesting that imposing restrictions from steady-state valuation model can improve OS predictability. This makes sense as less estimation errors come at the expense of less flexibility in estimating regression coefficients. This conclusion is consistent with the view of Campbell \& Thompson (2008). 
     
 
 
