@@ -162,6 +162,114 @@ stopifnot(
   abs(summary(cp_model)$r.squared - 0.15750945779275671) < 1e-12
 )
 
+# Estimate one return-forecasting regression for each bond maturity K = 2,...,5.
+maturity_regression_data <- regression_data |>
+  select(f_1, f_2, f_3, f_4, f_5) |>
+  mutate(
+    xr_2 = xr[outcome_sample, 1],
+    xr_3 = xr[outcome_sample, 2],
+    xr_4 = xr[outcome_sample, 3],
+    xr_5 = xr[outcome_sample, 4]
+  )
+
+forecasted_maturities <- 2:5
+maturity_models <- set_names(
+  map(
+    forecasted_maturities,
+    function(K) {
+      lm(
+        reformulate(
+          termlabels = paste0("f_", 1:5),
+          response = paste0("xr_", K)
+        ),
+        data = maturity_regression_data
+      )
+    }
+  ),
+  forecasted_maturities
+)
+
+expected_maturity_theta <- rbind(
+  c(
+    -0.0068232195949002854,
+    -0.4827396125619232703,
+    0.1928537746300231503,
+    0.2126531751330366371,
+    0.3924690087846884334,
+    -0.1769482955748130915
+  ),
+  c(
+    -0.010469679871220876,
+    -0.810338082323520781,
+    -0.297559287086993474,
+    1.175504066405646864,
+    0.627926095321693856,
+    -0.492601210576397719
+  ),
+  c(
+    -0.015346660963083944,
+    -1.190091724934451811,
+    -0.353600744301324321,
+    0.985563813891420226,
+    1.621129505565275908,
+    -0.802229340631788967
+  ),
+  c(
+    -0.021152809443767143,
+    -1.466379929110652292,
+    -0.387829488635747899,
+    0.863632654350446227,
+    1.695882785739069698,
+    -0.387179728619698793
+  )
+)
+
+estimated_maturity_theta <- do.call(
+  rbind,
+  map(maturity_models, ~ unname(coef(.x)))
+)
+
+expected_maturity_r_squared <- c(
+  0.14897395375955141,
+  0.14852602911411800,
+  0.17201407460619259,
+  0.15839264789067642
+)
+
+stopifnot(
+  identical(dim(estimated_maturity_theta), c(4L, 6L)),
+  all(map_int(maturity_models, nobs) == 859L),
+  all(map_int(maturity_models, ~ qr(model.matrix(.x))$rank) == 6L),
+  max(abs(estimated_maturity_theta - expected_maturity_theta)) < 1e-12,
+  max(
+    abs(
+      map_dbl(maturity_models, ~ summary(.x)$r.squared) -
+        expected_maturity_r_squared
+    )
+  ) < 1e-12,
+  max(abs(colMeans(estimated_maturity_theta) - unname(theta_hat))) < 1e-12
+)
+
+maturity_coefficient_results <- map2_dfr(
+  maturity_models,
+  forecasted_maturities,
+  function(model, K) {
+    tibble(
+      forecasted_bond_maturity = K,
+      parameter = theta_names,
+      forward_rate_maturity = c(NA_integer_, 1:5),
+      estimate = unname(coef(model))
+    )
+  }
+)
+
+stopifnot(
+  nrow(maturity_coefficient_results) == 24L,
+  all(maturity_coefficient_results$forecasted_bond_maturity %in% 2:5),
+  sum(is.na(maturity_coefficient_results$forward_rate_maturity)) == 4L,
+  all(is.finite(maturity_coefficient_results$estimate))
+)
+
 # Per prompt/4d.md, cp_t contains the five slope terms and excludes theta_0.
 forward_rate_sample <- forward_rate[regression_sample, , drop = FALSE]
 cp_t <- drop(forward_rate_sample %*% unname(theta_hat[-1]))
@@ -220,6 +328,10 @@ stopifnot(
 
 dir.create("code", showWarnings = FALSE, recursive = TRUE)
 write_csv(factor_results, "code/4d.csv")
+write_csv(
+  maturity_coefficient_results,
+  "code/4d_2_coefficients.csv"
+)
 
 # Convert consecutive recession months into shaded plotting intervals.
 recession_intervals <- factor_results |>
@@ -295,10 +407,68 @@ ggsave(
   bg = "white"
 )
 
+# Plot the five slope coefficients by predictor maturity for each return maturity.
+coefficient_plot_data <- maturity_coefficient_results |>
+  filter(!is.na(forward_rate_maturity)) |>
+  mutate(
+    forecasted_bond_maturity = factor(
+      forecasted_bond_maturity,
+      levels = 2:5,
+      labels = paste0(2:5, "-year bond")
+    )
+  )
+
+stopifnot(
+  nrow(coefficient_plot_data) == 20L,
+  identical(
+    sort(unique(coefficient_plot_data$forward_rate_maturity)),
+    1:5
+  )
+)
+
+coefficient_plot <- ggplot(
+  coefficient_plot_data,
+  aes(
+    x = forward_rate_maturity,
+    y = estimate,
+    color = forecasted_bond_maturity,
+    group = forecasted_bond_maturity
+  )
+) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2.2) +
+  scale_x_continuous(breaks = 1:5) +
+  scale_color_manual(
+    values = c("black", "red", "blue", "darkgreen"),
+    name = "Forecasted bond maturity"
+  ) +
+  labs(
+    x = "Forward-rate maturity (years)",
+    y = expression(hat(theta)[H]),
+    title = "Forward-rate coefficients by forecasted bond maturity"
+  ) +
+  theme_classic() +
+  theme(
+    text = element_text(family = "Times New Roman", size = 14),
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "right"
+  )
+
+ggsave(
+  filename = "figures/4d_2.png",
+  plot = coefficient_plot,
+  width = 8,
+  height = 5,
+  dpi = 300,
+  bg = "white"
+)
+
 print(
   theta_results |>
     mutate(estimate = sprintf("%.15f", estimate)),
   n = nrow(theta_results)
 )
 cat(sprintf("Regression R-squared: %.15f\n", summary(cp_model)$r.squared))
+print(maturity_coefficient_results, n = nrow(maturity_coefficient_results))
 print(factor_results, n = 6L)
