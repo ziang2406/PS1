@@ -493,7 +493,7 @@ By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking 
 \end{table}
 
 \subsection*{4 (b)} 
-For $H = 2,\ldots,5$, I estimate the OLS regression of excess returns on excess log yield as follows: 
+For $H = 2,\ldots,5$, I estimate the OLS regression of long-term excess returns on excess log yield as follows: 
 \[
     (1/H) \cdot xr_{t \to t+H}^{H} = a^{H} + b^{H} \cdot xy_{t}^{H} + e_{t}^{H}
 \]
@@ -514,5 +514,32 @@ where the hold-to-maturity excess return is $xr_{t \to t+H}^{H} = \sum_{h=1}^{H}
     \bottomrule
   \end{tabular}
 \end{table} 
+
+As observed in the table, $\hat{b}^{(H)}$ remains positive across all maturities, suggesting that a higher term spread predicts higher long-horizon hold-to-maturity excess return. As H increases, t-stat and $R^{2}$ decreases, which is consistent with the notion of time-varying bond risk premia.  
+
+\subsection*{4 (c)} 
+For $H = 2,\ldots,5$, I estimate the OLS regression of 1-year excess returns on log forward spreads as follows: 
+\[
+    xr_{t+1}^{H} = a^{H} + b^{H} \cdot xf_{t}^{H} + e_{t}^{H}
+\]
+Using a common set of 811-month sample from June 1952 to December 2019 and the Newey-West standard errors with a Barlett kernel and chosen lags of 20,20,20,19 for H = 2,3,4,5 respectively, I estimated the $b^{H}$, t-stat, and $R^{2}$ as follows: 
+\begin{table}[H]
+  \centering
+  \caption{Predictive regressions of 1-year excess bond returns on log forward spreads}
+  \label{tab:q4c}
+  \begin{tabular}{crrr}
+    \toprule
+    $H$ & $\hat{b}^{(H)}$ & Newey--West $t$-stat & $R^2$ \\
+    \midrule
+    2 & 0.6931 & 3.0524 & 0.0809 \\
+    3 & 0.9028 & 3.0669 & 0.0889 \\
+    4 & 1.1476 & 3.4600 & 0.1148 \\
+    5 & 0.9715 & 2.7420 & 0.0685 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Similar to part (b), a steeper forward spread predicts higher 1-year excess bond returns across all maturities with the highest predictability in H = 4 years. In addition, I also verified that $\hat{b}^{(2)}$ in Equation (4.2) is equal to that in Equation (4.3), following the steps in Footnote 15. 
+
 
 \end{document}
