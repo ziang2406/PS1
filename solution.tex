@@ -541,5 +541,21 @@ Using a common set of 811-month sample from June 1952 to December 2019 and the N
 
 Similar to part (b), a steeper forward spread predicts higher 1-year excess bond returns across all maturities with the highest predictability in H = 4 years. In addition, I also verified that $\hat{b}^{(2)}$ in Equation (4.2) is equal to that in Equation (4.3), following the steps in Footnote 15. 
 
+\subsection*{4 (d)} 
+Following Cochrane and Piazzesi (2005), I regressed the average 1-year excess bond returns across maturities on a linear combination of forward rates for $H = 1,\ldots,5$, using 859 observations from June 1952 to December 2023 as follows: 
+\[
+    \frac{1}{4} \cdot \sum_{H=2}^{5} xr_{t+1}^{H} = \theta_{0} + \sum_{H=1}^{5} \theta_{h} \cdot f_{t}^{H} + u_t
+\]
+
+Then, following the step in the paper, I used the $\hat{\theta_{h}}$ to estimate the common return-forecasting factor in decimals, defined as:
+\[
+    cp_{t} = \sum_{H=1}^{5} \hat{\theta_{h}} \cdot f_{t}^{H}
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/4d.png}
+    \label{fig:q8}
+\end{figure}
 
 \end{document}
