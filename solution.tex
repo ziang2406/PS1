@@ -518,7 +518,7 @@ where the hold-to-maturity excess return is $xr_{t \to t+H}^{H} = \sum_{h=1}^{H}
 As observed in the table, $\hat{b}^{(H)}$ remains positive across all maturities, suggesting that a higher term spread predicts higher long-horizon hold-to-maturity excess return. As H increases, t-stat and $R^{2}$ decreases, which is consistent with the notion of time-varying bond risk premia.  
 
 \subsection*{4 (c)} 
-For $H = 2,\ldots,5$, I estimate the OLS regression of 1-year excess returns on log forward spreads as follows: 
+For $H = 2,\ldots,5$, I estimated the OLS regression of 1-year excess returns on log forward spreads as follows: 
 \[
     xr_{t+1}^{H} = a^{H} + b^{H} \cdot xf_{t}^{H} + e_{t}^{H}
 \]
@@ -547,7 +547,7 @@ Following Cochrane and Piazzesi (2005), I regressed the average 1-year excess bo
     \frac{1}{4} \cdot \sum_{H=2}^{5} xr_{t+1}^{H} = \theta_{0} + \sum_{H=1}^{5} \theta_{h} \cdot f_{t}^{H} + u_t
 \]
 
-Then, following the step in the paper, I used the $\hat{\theta}_{h}$ to estimate the common return-forecasting factor in decimals, defined as:
+Then, replicating the construction in the paper, I used the $\hat{\theta}_{h}$ to estimate the common return-forecasting factor in decimals, defined as:
 \[
     cp_{t} = \sum_{H=1}^{5} \hat{\theta}_{h} \cdot f_{t}^{H}
 \]
@@ -558,7 +558,7 @@ Then, following the step in the paper, I used the $\hat{\theta}_{h}$ to estimate
     \label{fig:q8}
 \end{figure}
 
-Figure 8 presents the time series of the common return-forecasting factor agaisnt the NBER recessions in grey. It is clear that $cp_{t}$ is countercyclical as it tends to be high when there is a recession, suggesting that investors demand higher excess returns during economic downturns. It is also worth noting that $cp_t$ also becomes negative, especially during highly inflationtionary periods in 1980 and 2023. This could be due to the tent-shaped pattern of the estimated $\hat{\theta}_{H}$ coefficients as demonstrated by Cochrane \& Piazzesi. Given that the coefficients are negative on the shorter term maturities of forward rates, elevated short-term rates relative to medium and long-term rates put downward pressure on the resulting $cp_t$, leading to negative $cp_t$ during those times. I attempted to verify the tent-shaped pattern of the forward rate coefficients, using data from 1952 to 2023 and retrieved a relative similar observation. 
+Figure 8 presented the time series of the common return-forecasting factor agaisnt the NBER recessions in grey. It is clear that $cp_{t}$ is countercyclical as it tends to be high when there is a recession, suggesting that investors demand higher excess returns during economic downturns. It is also worth noting that $cp_t$ also becomes negative, especially during highly inflationtionary periods in 1980 and 2023. This could be due to the tent-shaped pattern of the estimated $\hat{\theta}_{H}$ coefficients as demonstrated by Cochrane \& Piazzesi. Given that the coefficients are negative on the shorter term maturities of forward rates, elevated short-term rates relative to medium and long-term rates put downward pressure on the resulting $cp_t$, leading to negative $cp_t$ during those times. I attempted to verify the tent-shaped pattern of the forward rate coefficients, using data from 1952 to 2023 and retrieved a relatively similar observation. 
 
 \begin{figure}[H]
     \centering
@@ -567,6 +567,28 @@ Figure 8 presents the time series of the common return-forecasting factor agaisn
 \end{figure}
 
 \subsection*{4 (e)} 
+For $H = 2,\ldots,5$, I ran the OLS regression of 1-year excess returns on the Cochrane-Piazzesi factor as follows: 
+\[
+    xr_{t+1}^{H} = a^{H} + b^{H} \cdot cp_{t} + e_{t}^{H}
+\]
+Using a set of 859 observations from June 1952 to December 2023 and the Newey-West standard error with an automatically chosen lag of 21, I estimated $b_{H}$, t-statistics, and $R^{2}$ as follows:
 
+\begin{table}[H]
+  \centering
+  \caption{Predictive regressions of 1-year excess bond returns on the Cochrane--Piazzesi factor}
+  \label{tab:q4e}
+  \begin{tabular}{crrr}
+    \toprule
+    $H$ & $\hat{b}^{(H)}$ & Newey--West $t$-stat & $R^2$ \\
+    \midrule
+    2 & 0.4418 & 4.1257 & 0.1367 \\
+    3 & 0.8274 & 4.1243 & 0.1438 \\
+    4 & 1.2517 & 4.3896 & 0.1705 \\
+    5 & 1.4791 & 4.1986 & 0.1552 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+In comparison to the individual regressions of excess returns on log yield spreads and log forward spreads in part (b) and part (c), $cp_t$ significantly improves the predictability of excess returns, with t-stat and $R^{2}$ consistently above 1.96 and 12 \% across all maturities. Most importantly, $cp_t$ seems to carry additional information that helps it better predict 1-year excess bond returns with higher maturities. 
 
 \end{document}
