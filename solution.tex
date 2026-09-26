@@ -464,6 +464,33 @@ Given these results, we can clearly see that the steady state constraint has sli
     
 \section*{Problem 3}
 \subsection*{3 (a)} 
+Imposing standard restrictions, I restricted the sample of CRSP monthly stocks to contain common stocks on firms incorporated in the United States, trading on NYSE, Amex, or Nasdaq, and exclude utilities and financials. To account for delisting, I calculated the adjusted CRSP return as  $ {RET\_ADJ}_{\tau} = (1+RET_\tau)(1+DLRET_\tau)-1$. Then I constructed the monthly momentum signal for a firm $j$ at time $\tau = 1,\ldots, T$ as follows:
+\[
+    MOM_{j, \tau} = \prod_{t=1}^{12}  (1+ RET\_ADJ_{j,\tau - t}) - 1 
+\]
+
+To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_ADJ}_{\tau}$ is available and that there are 12 chronologically ordered observations of ${RET\_ADJ}_{\tau}$ corresponding to 12 calender months. For companies with available $DLSTCD$ and $DLRET$, there is no subsequent obeservation. Then, I proceeded to match the newly constructed CRSP sample with the Chen \& Zimmermann (2022)'s $Mom12m$ dataset on $PERMNO$ and $YYYYMM$. Using an inner merge, I retrieved 2,410,492 pairs of $MOM$ and $MOM-CZ$ and ran 739 monthly cross-firm regressions in the sample as follows:
+\[
+    MOM\_CZ_{j, \tau} = a_\tau + b_\tau \cdot MOM_{j, \tau} + e_{j, \tau}
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3a_intercept.png}
+    \label{fig:q9}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3a_slope.png}
+    \label{fig:q10}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3a_Rsquared.png}
+    \label{fig:q11}
+\end{figure}
 
 \section*{Problem 4}
 \subsection*{4 (a)} 
