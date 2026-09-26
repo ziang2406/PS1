@@ -547,9 +547,9 @@ Following Cochrane and Piazzesi (2005), I regressed the average 1-year excess bo
     \frac{1}{4} \cdot \sum_{H=2}^{5} xr_{t+1}^{H} = \theta_{0} + \sum_{H=1}^{5} \theta_{h} \cdot f_{t}^{H} + u_t
 \]
 
-Then, following the step in the paper, I used the $\hat{\theta_{h}}$ to estimate the common return-forecasting factor in decimals, defined as:
+Then, following the step in the paper, I used the $\hat{\theta}_{h}$ to estimate the common return-forecasting factor in decimals, defined as:
 \[
-    cp_{t} = \sum_{H=1}^{5} \hat{\theta_{h}} \cdot f_{t}^{H}
+    cp_{t} = \sum_{H=1}^{5} \hat{\theta}_{h} \cdot f_{t}^{H}
 \]
 
 \begin{figure}[H]
@@ -558,5 +558,12 @@ Then, following the step in the paper, I used the $\hat{\theta_{h}}$ to estimate
     \label{fig:q8}
 \end{figure}
 
-Figure 8 presents the time series of the common return-forecasting factor agaisnt the NBER recessions in grey. It is clear that $cp_{t}$ is countercyclical as it tends to be high when there is a recession, suggesting that investors demand higher excess returns during economic downturns.  
+Figure 8 presents the time series of the common return-forecasting factor agaisnt the NBER recessions in grey. It is clear that $cp_{t}$ is countercyclical as it tends to be high when there is a recession, suggesting that investors demand higher excess returns during economic downturns. It is also worth noting that $cp_t$ also becomes negative, especially during highly inflationtionary periods in 1980 and 2023. This could be due to the tent-shaped pattern of the estimated $\hat{\theta}_{H}$ coefficients as demonstrated by Cochrane \& Piazzesi. Given that the coefficients are negative on the shorter term maturities of forward rates, elevated short-term rates relative to medium and long-term rates put downward pressure on the resulting $cp_t$, leading to negative $cp_t$ during those times. I attempted to verify the tent-shaped pattern of the forward rate coefficients, using data from 1952 to 2023 and retrieved a relative similar observation. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/4d_2.png}
+    \label{fig:q9}
+\end{figure}
+
 \end{document}

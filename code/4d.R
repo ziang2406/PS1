@@ -450,9 +450,9 @@ coefficient_plot <- ggplot(
   ) +
   theme_classic() +
   theme(
-    text = element_text(family = "Times New Roman", size = 14),
+    text = element_text(family = "Times New Roman", size = 12),
     plot.title = element_text(hjust = 0.5),
-    legend.position = "right"
+    legend.position = c(0.20,0.80)
   )
 
 ggsave(
