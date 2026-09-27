@@ -564,3 +564,13 @@
 - **Substantive mathematical, economic, or empirical suggestions:** Identified each missing or conflicting sample, link, timing, collision, transformation, output, and currency choice and asked the user to record the intended convention before implementation. Reported the empirical unit comparison without choosing the transformation. The user supplied and saved every implemented decision. No unrequested estimator, filter, timing, or inference convention was introduced.
 - **Type of assistance:** Empirical implementation; code debugging; formatting/visualization; other -- Git repository diagnostics.
 - **Grouped minor subsequent requests:** No. The concurrent Git cleanup is an administrative task rather than a grouped substantive 3b request.
+
+## Git history migration record — `2026-09-27T01:51:16-04:00`
+
+- **Reason:** GitHub rejected the unpushed history because regular Git blobs for `CRSP_monthly.csv`, `cleaned_CRSP.csv`, and `Mom12m.csv` exceeded its file-size limit. Additional local data files were intentionally excluded at the user's request.
+- **Scope:** Rewrote only the commits in `origin/main..main`, retaining their order, messages, and intentionally empty TP boundary commits. `origin/main` remained the unchanged parent, so the cleaned branch remains fast-forward pushable without force.
+- **Paths removed from the rewritten Git history:** `BMdec.csv`; `CRSP_monthly.csv`; `Fundamental Annual.csv`; `GP.csv`; `Mom12m.csv`; `cleaned_CRSP.csv`; `solution.synctex.gz`.
+- **Local-file preservation:** All seven working files remained on disk with byte-for-byte identical SHA-256 hashes and are excluded by `.gitignore`.
+- **Original history preservation:** Local branch `backup/pre-large-file-cleanup-20260927` points to original TP-after commit `32cf7f395a9444f0b6a31368e9fb591838ceb42f`. Verified bundle `.git/pre-large-file-cleanup-20260927.bundle` has SHA-256 `5f617f4cb1f5a90b83319be8d2aac0a9f978de24b3e957ee2c32f576b678d93e` and contains the complete original history.
+- **TP snapshot hash mapping after removal of ignored data paths:** Question 3a before `5156461fb86b6f1168197e0c6366cd6a630009aa` became `534899c74427c882cc53eb2f9e0a15a8c087bdd0`; Question 3a after `28c69c8c1591a8836038fc238c2b855837d2700e` became `59f19133e1bae871ba8d4804989f00361e0bad60`; Question 3b before `b05339a0571505aec0913fbf7e6309b5f05391a6` became `6d055f37d6ea99aed2ff10409f5d99ecdd1a81b1`; Question 3b after `32cf7f395a9444f0b6a31368e9fb591838ceb42f` became `ccf19171b16556532aab527578668f73458868b4`.
+- **Verification:** No blob of 50 MiB or larger remains reachable in `origin/main..main`; all requested code, prompts, result CSVs, figures, `solution.tex`, and `solution.pdf` remain in the cleaned history.
