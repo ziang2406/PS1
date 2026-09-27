@@ -5,4 +5,8 @@
 *.fls
 *.log
 *.out
-*.synctex.gz
+*.synctex.gzCRSP_monthly.csv
+Fundamental Annual.csv
+BMdec.csv
+Mom12m.csv
+cleaned_CRSP.csv
