@@ -492,6 +492,39 @@ To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_A
     \label{fig:q11}
 \end{figure}
 
+\subsection*{3 (b)} 
+Using the Fundamental Annual under the CRSP/COMPUSTAT Merged dataset, I computed the annual book equity $BE = SE + TXDITC - BVPS$ following the instructions in the footnote. I then imposed the backfilling bias restriction requiring that firms need at least 2 years of data in addition to the requirement of $BE > 0$. I also verified that there is a unique observation for each $GVKEY$ and $FYEAR$ pair using the standard Compustat Annual filters. Then, using the cleaned CRSP dataset, I calculated the December market equity in millions as:
+\[
+ME_{j,\tau} = \frac{|PRC_{j, \tau}| * SHROUT_{j, \tau}}{1000}
+\]
+Then, I linked these 2 datasets on $PERMNO$ and $YYYYMM$ and constructed the June book-to-market signal $BM$ in the fiscal year t using $BE$ and December $ME$ in the fiscal year t-1 as follows: 
+\[
+    BM_{j,t} = \frac{BE_{j,t-1}}{ME_{j,t-1}}
+\]
+I kept the constructed June $BM$ signal fixed from June of year t through May of year t+1 as the monthly $BM$. After inspecting the unit levels of $BM$ and $BM\_CZ$, I ran a cross-sectional regression of $BZ\_CZ$ on monthly $BZ$ for each month $\tau$ and retrieved the following variables: 
+\[
+    BM\_CZ_{j, \tau} = a_\tau + b_\tau * BM_{j, \tau} + e_{j, \tau}
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3b_intercept.png}
+    \label{fig:q13}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3b_slope.png}
+    \label{fig:q14}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/3b_Rsquared.png}
+    \label{fig:q15}
+\end{figure}
+
+
 \section*{Problem 4}
 \subsection*{4 (a)} 
 I select Fama-Bliss discount bonds with maturities of 1-5 years by first, filtering those with KYTREASNOX from 2000047 to 2000051 and, second, verifying the mapping with 5 unique combinations of KYTREASNOX and TTERMLBL. Obtaining the decimal yield by dividing TMYTM by 100, I calculate the following: 
