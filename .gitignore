@@ -5,8 +5,12 @@
 *.fls
 *.log
 *.out
-*.synctex.gzCRSP_monthly.csv
-Fundamental Annual.csv
-BMdec.csv
-Mom12m.csv
-cleaned_CRSP.csv
+*.synctex.gz
+
+# Large local data files (keep them on disk, but not in Git).
+/CRSP_monthly.csv
+/Fundamental Annual.csv
+/BMdec.csv
+/Mom12m.csv
+/GP.csv
+/cleaned_CRSP.csv

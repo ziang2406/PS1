@@ -147,6 +147,7 @@ required_fundamental_columns <- c(
   "CONSOL",
   "POPSRC",
   "DATAFMT",
+  "CURCD",
   "AT",
   "CEQ",
   "LT",
@@ -168,11 +169,54 @@ fundamental <- fundamental[
 ]
 fundamental_standard_filter_observations <- nrow(fundamental)
 
+# The final student-authored revision restricts Compustat accounting values to
+# U.S. dollars so that book equity and CRSP market equity use the same currency.
+fundamental <- fundamental[
+  !is.na(CURCD) & CURCD == "USD"
+]
+fundamental_usd_filter_observations <- nrow(fundamental)
+
+stopifnot(
+  fundamental_usd_filter_observations > 0L,
+  all(fundamental$CURCD == "USD")
+)
+
 standard_duplicate_keys <- fundamental[
   ,
   .N,
   by = .(GVKEY, FYEAR)
 ][N > 1L]
+
+# Apply the backfilling-bias history rule to the unique Compustat accounting
+# years before imposing CCM-link eligibility. Link replication must not count
+# as additional annual history, and fiscal years need not be consecutive.
+annual_history <- unique(
+  fundamental[
+    !is.na(GVKEY) & !is.na(FYEAR),
+    .(GVKEY, FYEAR)
+  ]
+)
+setorder(annual_history, GVKEY, FYEAR)
+annual_history[
+  ,
+  annual_observation_number := seq_len(.N),
+  by = GVKEY
+]
+
+annual_history_observations <- nrow(annual_history)
+annual_history_gvkeys <- uniqueN(annual_history$GVKEY)
+third_or_later_history_observations <- annual_history[
+  annual_observation_number >= 3L,
+  .N
+]
+
+fundamental <- merge(
+  fundamental,
+  annual_history,
+  by = c("GVKEY", "FYEAR"),
+  all.x = TRUE,
+  sort = FALSE
+)
 
 fundamental[, LINKDT_numeric := suppressWarnings(as.integer(LINKDT))]
 fundamental[, LINKENDDT_numeric := suppressWarnings(as.integer(LINKENDDT))]
@@ -334,9 +378,6 @@ fundamental[, BVPS := fcoalesce(PSTKRV, PSTKL, PSTK)]
 fundamental[is.na(BVPS), BVPS := 0]
 fundamental[, BE := SE + TXDITC_used - BVPS]
 
-setorder(fundamental, GVKEY, FYEAR, DATADATE)
-fundamental[, annual_observation_number := seq_len(.N), by = GVKEY]
-
 third_or_later_observations <- fundamental[
   annual_observation_number >= 3L,
   .N
@@ -391,6 +432,19 @@ annual_signal_candidates <- merge(
 annual_signal_candidates[, BM := BE / ME]
 
 annual_signal_matched_observations <- nrow(annual_signal_candidates)
+
+annual_signal_candidates[
+  ,
+  formation_date := BM_YEAR * 10000L + 630L
+]
+post_formation_statement_observations <- annual_signal_candidates[
+  DATADATE > formation_date,
+  .N
+]
+annual_signal_candidates <- annual_signal_candidates[
+  DATADATE <= formation_date
+]
+
 annual_signal_candidates <- annual_signal_candidates[
   is.finite(BM) & BM > 0
 ]
@@ -429,11 +483,6 @@ setorder(
   LINKTYPE_rank,
   -DATADATE
 )
-
-annual_signal_candidates[
-  ,
-  formation_date := BM_YEAR * 10000L + 630L
-]
 
 stopifnot(
   all(competing_signal_records$DATADATE <=
@@ -496,14 +545,20 @@ annual_signal_permnos <- uniqueN(annual_signals$PERMNO)
 annual_signal_start_year <- min(annual_signals$BM_YEAR)
 annual_signal_end_year <- max(annual_signals$BM_YEAR)
 
-# Carry each June signal through the following May.
-cleaned_crsp[
+# Carry each June signal through the following May. Keep this helper key out of
+# the physical cleaned_CRSP.csv, whose schema is the ten screened CRSP fields.
+monthly_crsp_keys <- cleaned_crsp[
   ,
-  BM_YEAR := YYYYMM %/% 100L - fifelse(YYYYMM %% 100L < 6L, 1L, 0L)
+  .(
+    PERMNO,
+    YYYYMM,
+    BM_YEAR = YYYYMM %/% 100L -
+      fifelse(YYYYMM %% 100L < 6L, 1L, 0L)
+  )
 ]
 
 monthly_bm <- merge(
-  cleaned_crsp[, .(PERMNO, YYYYMM, BM_YEAR)],
+  monthly_crsp_keys,
   annual_signals[, .(PERMNO, BM_YEAR, BM)],
   by = c("PERMNO", "BM_YEAR"),
   all = FALSE,
@@ -626,6 +681,66 @@ stopifnot(
   all(monthly_regressions$N_tau >= 3L)
 )
 
+# Reproducibility checkpoints for the downloaded data and final USD sample.
+stopifnot(
+  crsp_raw_observations == 4775098L,
+  cleaned_crsp_observations == 2752659L,
+  fundamental_raw_observations == 338794L,
+  fundamental_standard_filter_observations == 338794L,
+  fundamental_usd_filter_observations == 333392L,
+  annual_history_observations == 330470L,
+  annual_history_gvkeys == 27431L,
+  third_or_later_history_observations == 277383L,
+  fundamental_valid_link_observations == 330239L,
+  nrow(accounting_duplicate_keys) == 0L,
+  nrow(residual_link_ties) == 0L,
+  selected_link_observations == 330239L,
+  third_or_later_observations == 277215L,
+  positive_be_observations == 247013L,
+  annual_signal_matched_observations == 169163L,
+  post_formation_statement_observations == 0L,
+  annual_signal_positive_observations == 168611L,
+  nrow(competing_signal_keys) == 0L,
+  annual_signal_observations == 168611L,
+  annual_signal_permnos == 15619L,
+  monthly_bm_observations == 1880962L,
+  joint_inner_observations == 1848707L,
+  joint_nonpositive_or_nonfinite_observations == 2077L,
+  joint_observations == 1846630L,
+  joint_permnos == 15059L,
+  joint_start_yyyymm == 196306L,
+  joint_end_yyyymm == 202412L,
+  nrow(monthly_regressions) == 739L,
+  min(monthly_regressions$N_tau) == 463L,
+  median(monthly_regressions$N_tau) == 2682L,
+  max(monthly_regressions$N_tau) == 3966L,
+  abs(mean(monthly_regressions$N_tau) - 2498.822733423550) < 1e-10,
+  abs(bm_bmcz_correlation - 0.9941911066012790) < 1e-12,
+  abs(bm_bmcz_median_ratio - 1) < 1e-12,
+  monthly_regressions$YYYYMM[1] == 196306L,
+  abs(monthly_regressions$a_tau[1] -
+    (-0.0014444888601000501)) < 1e-12,
+  abs(monthly_regressions$b_tau[1] -
+    0.9997492642788950) < 1e-12,
+  abs(monthly_regressions$R_squared[1] -
+    0.9987486328462480) < 1e-12,
+  monthly_regressions$N_tau[1] == 465L,
+  monthly_regressions$YYYYMM[739] == 202412L,
+  abs(monthly_regressions$a_tau[739] -
+    (-0.1401954282125400)) < 1e-12,
+  abs(monthly_regressions$b_tau[739] -
+    1.1944167560548100) < 1e-12,
+  abs(monthly_regressions$R_squared[739] -
+    0.9997854372525830) < 1e-12,
+  monthly_regressions$N_tau[739] == 2506L,
+  abs(mean(monthly_regressions$a_tau) -
+    0.0215449853826894) < 1e-12,
+  abs(mean(monthly_regressions$b_tau) -
+    0.9909139238570490) < 1e-12,
+  abs(mean(monthly_regressions$R_squared) -
+    0.9606677272184601) < 1e-12
+)
+
 # Aggregate requested construction, matching, level, and regression summaries.
 summary_values <- c(
   list(
@@ -640,7 +755,13 @@ summary_values <- c(
     fundamental_raw_observations = fundamental_raw_observations,
     fundamental_standard_filter_observations =
       fundamental_standard_filter_observations,
+    fundamental_USD_filter_observations =
+      fundamental_usd_filter_observations,
     standard_duplicate_GVKEY_FYEAR_pairs = nrow(standard_duplicate_keys),
+    annual_history_observations = annual_history_observations,
+    annual_history_GVKEYs = annual_history_gvkeys,
+    third_or_later_history_observations =
+      third_or_later_history_observations,
     fundamental_valid_link_observations =
       fundamental_valid_link_observations,
     accounting_duplicate_GVKEY_FYEAR_pairs =
@@ -657,6 +778,8 @@ summary_values <- c(
       finite_positive_december_me_observations,
     annual_signal_matched_observations =
       annual_signal_matched_observations,
+    post_formation_statement_observations =
+      post_formation_statement_observations,
     annual_signal_positive_observations =
       annual_signal_positive_observations,
     competing_PERMNO_BM_YEAR_pairs = nrow(competing_signal_keys),
