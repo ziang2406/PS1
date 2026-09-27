@@ -469,7 +469,7 @@ Imposing standard restrictions, I restricted the sample of CRSP monthly stocks t
     MOM_{j, \tau} = \prod_{t=1}^{12}  (1+ RET\_ADJ_{j,\tau - t}) - 1 
 \]
 
-To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_ADJ}_{\tau}$ is available and that there are 12 chronologically ordered observations of ${RET\_ADJ}_{\tau}$ corresponding to 12 calender months. For companies with available $DLSTCD$ and $DLRET$, there is no subsequent obeservation. Then, I proceeded to match the newly constructed CRSP sample with the Chen \& Zimmermann (2022)'s $Mom12m$ dataset on $PERMNO$ and $YYYYMM$. Using an inner merge, I retrieved 2,410,492 pairs of $MOM$ and $MOM-CZ$ and ran 739 monthly cross-firm regressions in the sample as follows:
+To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_ADJ}_{\tau}$ is available and that there are 12 chronologically ordered observations of ${RET\_ADJ}_{\tau}$ corresponding to 12 calender months. For companies with available $DLSTCD$ and $DLRET$, there is no subsequent obeservation. Then, I proceeded to match the newly constructed CRSP sample with the Chen \& Zimmermann (2022) Mom12m dataset on $PERMNO$ and $YYYYMM$. Using an inner merge, I retrieved 2,410,492 pairs of $MOM$ and $MOM\_CZ$ and ran 739 monthly cross-firm regressions in the sample as follows:
 \[
     MOM\_CZ_{j, \tau} = a_\tau + b_\tau \cdot MOM_{j, \tau} + e_{j, \tau}
 \]
@@ -493,7 +493,7 @@ To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_A
 \end{figure}
 
 \subsection*{3 (b)} 
-Using the Fundamental Annual under the CRSP/COMPUSTAT Merged dataset, I computed the annual book equity $BE = SE + TXDITC - BVPS$ following the instructions in the footnote. I then imposed the backfilling bias restriction requiring that firms need at least 2 years of data in addition to the requirement of $BE > 0$. I also verified that there is a unique observation for each $GVKEY$ and $FYEAR$ pair using the standard Compustat Annual filters. Then, using the cleaned CRSP dataset, I calculated the December market equity in millions as:
+Using the Fundamental Annual under the CRSP/COMPUSTAT Merged dataset, I computed the annual book equity $BE = SE + TXDITC - BVPS$ following the instructions in the footnote. I then imposed the backfilling bias restriction requiring that firms need at least 2 years of data, in addition to the requirement of $BE > 0$ and $CURCD = USD$. I also verified that there is a unique observation for each $GVKEY$ and $FYEAR$ pair using the standard Compustat Annual filters ($LINKTYPE = LC$ or $LU$ and $LINKPRIM = P$ or $C$ with preferences for the former). Then, using the cleaned CRSP dataset, I calculated the December market equity in millions as:
 \[
 ME_{j,\tau} = \frac{|PRC_{j, \tau}| * SHROUT_{j, \tau}}{1000}
 \]
@@ -501,7 +501,7 @@ Then, I linked these 2 datasets on $PERMNO$ and $YYYYMM$ and constructed the Jun
 \[
     BM_{j,t} = \frac{BE_{j,t-1}}{ME_{j,t-1}}
 \]
-I kept the constructed June $BM$ signal fixed from June of year t through May of year t+1 as the monthly $BM$. After inspecting the unit levels of $BM$ and $BM\_CZ$, I ran a cross-sectional regression of $BZ\_CZ$ on monthly $BZ$ for each month $\tau$ and retrieved the following variables: 
+I kept the constructed June $BM$ signal fixed from June of year t through May of year t+1 as the assigned monthly $BM$. After inspecting the unit levels of $BM$ and $BM\_CZ$, I ran a cross-sectional regression of $BM\_CZ$ on monthly $BM$ for each month $\tau$ and retrieved the following variables: 
 \[
     BM\_CZ_{j, \tau} = a_\tau + b_\tau * BM_{j, \tau} + e_{j, \tau}
 \]
@@ -523,7 +523,6 @@ I kept the constructed June $BM$ signal fixed from June of year t through May of
     \includegraphics[width=0.75\textwidth]{figures/3b_Rsquared.png}
     \label{fig:q15}
 \end{figure}
-
 
 \section*{Problem 4}
 \subsection*{4 (a)} 
