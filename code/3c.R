@@ -767,6 +767,17 @@ for (type_code in portfolio_types$TYPE_CODE) {
     DISPLAY_NAME
   ]
   plot_data <- portfolio_means[TYPE_CODE == type_code]
+  y_increment <- 0.001
+  y_base <- floor(min(plot_data$AVERAGE_XRET) / y_increment) * y_increment
+  y_top <- ceiling(max(plot_data$AVERAGE_XRET) / y_increment) * y_increment
+
+  if (abs(min(plot_data$AVERAGE_XRET) - y_base) < 1e-12) {
+    y_base <- y_base - y_increment
+  }
+  if (abs(max(plot_data$AVERAGE_XRET) - y_top) < 1e-12) {
+    y_top <- y_top + y_increment
+  }
+  y_breaks <- seq(y_base, y_top, by = y_increment)
 
   portfolio_plot <- ggplot(
     plot_data,
@@ -783,19 +794,38 @@ for (type_code in portfolio_types$TYPE_CODE) {
       breaks = names(signal_display_names),
       labels = unname(signal_display_names)
     ) +
-    scale_x_continuous(breaks = 1:10) +
-    scale_y_continuous(labels = percent_label) +
+    scale_x_continuous(
+      breaks = 1:10,
+      minor_breaks = NULL,
+      limits = c(1, 10)
+    ) +
+    scale_y_continuous(
+      breaks = y_breaks,
+      minor_breaks = NULL,
+      limits = c(y_base, y_top),
+      labels = percent_label,
+      expand = expansion(mult = 0)
+    ) +
     labs(
       title = type_label,
       x = "Signal decile",
       y = "Average monthly excess return",
       color = "Signal"
     ) +
-    theme_minimal(base_size = 12) +
+    theme_minimal(base_size = 12, base_family = "Times New Roman") +
     theme(
-      text = element_text(color = "black"),
+      text = element_text(
+        family = "Times New Roman",
+        color = "black"
+      ),
       plot.title = element_text(hjust = 0.5),
       legend.position = "bottom",
+      panel.grid.minor = element_blank(),
+      panel.border = element_rect(
+        color = "darkgray",
+        fill = NA,
+        linewidth = 0.5
+      ),
       plot.background = element_rect(fill = "white", color = NA),
       panel.background = element_rect(fill = "white", color = NA),
       legend.background = element_rect(fill = "white", color = NA)

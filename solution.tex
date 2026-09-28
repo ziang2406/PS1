@@ -21,7 +21,7 @@
 
 \begin{document}
 \maketitle
-\section*{Problem 1}
+\section*{Question 1}
 \subsection*{1 (a)}
 
 Starting from $R_{e,t+1} = \frac{P_{t+1} + D_{t+1}}{P_t}$ and assuming that $D$ is greater than zero, we take log of both sides and have:
@@ -342,7 +342,7 @@ $H\to\infty$ in Equation {\color{red}(1.8)} and have:
     \tag*{\color{red}(1.9)}
 \end{align}
 
-\section*{Problem 2}
+\section*{Question 2}
 \subsection*{2 (a)}
 Running OLS regressions of average excess return on dividend-price ratio presents the following figure. 
 \begin{figure}[H]
@@ -462,7 +462,7 @@ $R^{2}_{OS2}$, using the same formula as question 2d, is 0.001978 with the 50-ye
 
 Given these results, we can clearly see that the steady state constraint has slightly improved the out-of-sample $R^2$ $(0.001978 > 0.001824)$. Looking over the horizons, the rolling $R^2$ using the fixed coefficient constraint also never dipped below 0, suggesting that imposing restrictions from steady-state valuation model can improve OS predictability. This makes sense as less estimation errors come at the expense of less flexibility in estimating regression coefficients. This conclusion is consistent with the view of Campbell \& Thompson (2008). 
     
-\section*{Problem 3}
+\section*{Question 3}
 \subsection*{3 (a)} 
 Imposing standard restrictions, I restricted the sample of CRSP monthly stocks to contain common stocks on firms incorporated in the United States, trading on NYSE, Amex, or Nasdaq, and exclude utilities and financials. To account for delisting, I calculated the adjusted CRSP return as  $ {RET\_ADJ}_{\tau} = (1+RET_\tau)(1+DLRET_\tau)-1$. Then I constructed the monthly momentum signal for a firm $j$ at time $\tau = 1,\ldots, T$ as follows:
 \[
@@ -524,7 +524,83 @@ I kept the constructed June $BM$ signal fixed from June of year t through May of
     \label{fig:q15}
 \end{figure}
 
-\section*{Problem 4}
+\subsection*{3 (c)} 
+\begin{table}[H]
+  \centering
+  \caption{HML results: Value-weighted, annual, NYSE breakpoints}
+  \label{tab:3c_i_hml}
+  \begin{tabular}{lrrrrr}
+    \hline
+    Signal & Mean HML & Newey--West SE & $t$-statistic & Lag & $T$ \\
+    \hline
+    BM\_CZ & 0.002972 & 0.002017 & 1.474 & 1 & 738 \\
+    GP\_CZ & 0.003471 & 0.001630 & 2.129 & 8 & 738 \\
+    MOM\_CZ & 0.005151 & 0.002268 & 2.271 & 6 & 738 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{HML results: Equal-weighted, annual, NYSE breakpoints}
+  \label{tab:3c_ii_hml}
+  \begin{tabular}{lrrrrr}
+    \hline
+    Signal & Mean HML & Newey--West SE & $t$-statistic & Lag & $T$ \\
+    \hline
+    BM\_CZ & 0.009895 & 0.001874 & 5.281 & 11 & 738 \\
+    GP\_CZ & 0.005982 & 0.001695 & 3.529 & 11 & 738 \\
+    MOM\_CZ & 0.000046 & 0.002085 & 0.022 & 5 & 738 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{HML results: Value-weighted, monthly, NYSE breakpoints}
+  \label{tab:3c_iii_hml}
+  \begin{tabular}{lrrrrr}
+    \hline
+    Signal & Mean HML & Newey--West SE & $t$-statistic & Lag & $T$ \\
+    \hline
+    BM\_CZ & 0.003219 & 0.002014 & 1.598 & 3 & 738 \\
+    GP\_CZ & 0.003444 & 0.001686 & 2.042 & 10 & 738 \\
+    MOM\_CZ & 0.012548 & 0.002717 & 4.619 & 1 & 738 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{HML results: Value-weighted, annual, general breakpoints}
+  \label{tab:3c_iv_hml}
+  \begin{tabular}{lrrrrr}
+    \hline
+    Signal & Mean HML & Newey--West SE & $t$-statistic & Lag & $T$ \\
+    \hline
+    BM\_CZ & 0.003438 & 0.002439 & 1.410 & 8 & 738 \\
+    GP\_CZ & 0.004335 & 0.002092 & 2.072 & 7 & 738 \\
+    MOM\_CZ & 0.007482 & 0.002910 & 2.571 & 4 & 738 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{HML results: Equal-weighted, monthly, general breakpoints}
+  \label{tab:3c_v_hml}
+  \begin{tabular}{lrrrrr}
+    \hline
+    Signal & Mean HML & Newey--West SE & $t$-statistic & Lag & $T$ \\
+    \hline
+    BM\_CZ & 0.009939 & 0.001909 & 5.206 & 10 & 738 \\
+    GP\_CZ & 0.006754 & 0.002191 & 3.082 & 12 & 738 \\
+    MOM\_CZ & 0.010240 & 0.003073 & 3.332 & 10 & 738 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Question 4}
 \subsection*{4 (a)} 
 I select Fama-Bliss discount bonds with maturities of 1-5 years by first, filtering those with KYTREASNOX from 2000047 to 2000051 and, second, verifying the mapping with 5 unique combinations of KYTREASNOX and TTERMLBL. Obtaining the decimal yield by dividing TMYTM by 100, I calculate the following: 
 \begin{enumerate}
