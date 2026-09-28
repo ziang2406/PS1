@@ -426,7 +426,7 @@ Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}
     \label{fig:q4}
 \end{figure}
 
-The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting errors from the OS OLS estimation with the first window covering January 1941 to December 1990. As observed from the plot below, the predictability power of the model severly declines around 2000 and beyond 2005. 
+The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting errors from the OS OLS estimation with the first window covering January 1941 to December 1990. As observed from the plot below, the predictability power of the model severely declines around 2000 and beyond 2005. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/2d_2.png}
@@ -492,6 +492,8 @@ To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_A
     \label{fig:q11}
 \end{figure}
 
+As observed in these plots, the intercepts and slopes bounced around 0 and 1 with $R^{2}$ close to 1, suggesting that the constructed $BM$ closely tracks $BM\_CZ$. 
+
 \subsection*{3 (b)} 
 Using the Fundamental Annual under the CRSP/COMPUSTAT Merged dataset, I computed the annual book equity $BE = SE + TXDITC - BVPS$ following the instructions in the footnote. I then imposed the backfilling bias restriction requiring that firms need at least 2 years of data, in addition to the requirement of $BE > 0$ and $CURCD = USD$. I also verified that there is a unique observation for each $GVKEY$ and $FYEAR$ pair using the standard Compustat Annual filters ($LINKTYPE = LC$ or $LU$ and $LINKPRIM = P$ or $C$ with preferences for the former). Then, using the cleaned CRSP dataset, I calculated the December market equity in millions as:
 \[
@@ -501,7 +503,7 @@ Then, I linked these 2 datasets on $PERMNO$ and $YYYYMM$ and constructed the Jun
 \[
     BM_{j,t} = \frac{BE_{j,t-1}}{ME_{j,t-1}}
 \]
-I kept the constructed June $BM$ signal fixed from June of year t through May of year t+1 as the assigned monthly $BM$. After inspecting the unit levels of $BM$ and $BM\_CZ$, I ran a cross-sectional regression of $BM\_CZ$ on monthly $BM$ for each month $\tau$ and retrieved the following variables: 
+I kept the constructed June $BM$ signal fixed from June of year t through May of year t+1 as the assigned monthly $BM$. After inspecting the unit levels of $BM$ and $BM\_CZ$, I ran a cross-sectional regression of $BM\_CZ$ on monthly $BM$ for each month $\tau$ as a validation test and retrieved the following variables: 
 \[
     BM\_CZ_{j, \tau} = a_\tau + b_\tau * BM_{j, \tau} + e_{j, \tau}
 \]
@@ -524,6 +526,7 @@ I kept the constructed June $BM$ signal fixed from June of year t through May of
     \label{fig:q15}
 \end{figure}
 
+Except for an outlier observed in 2025, the constructed June $BM$ variable closely tracks $BM\_CZ$ with $R^2$ close to 1.
 \subsection*{3 (c)} 
 Following the sorting methods, I constructed 5 types of decile portfolios for each Chen-Zimmermann signal and retrieved their average monthly excess returns as follows: 
 
@@ -704,18 +707,18 @@ Then, I computed the Newey-West (1987, 1994) standard errors to account for auto
   \end{minipage}
 \end{table}
 
-Looking at the results of OLS regressions, $\widehat{b}_{DUR}$ is negative and statistically significant across all regression specifications, which is consistent with the existence of the short duration premium (Goncalves, 2021b). In particular, firms with high ranks in $DUR$ (long duration stocks) tend to generate lower future returns than short duration counterparts. Controlling for both $GP\_CZ$ and $BM\_CZ$, $DUR$'s magnitude remained meaningful at -0.85\%, far outweighing the other two signals. While $BM\_CZ$ and $GP\_CZ$ were statistically signifincant in their standalone and joint regressions, these premia vanished after controlling for $DUR$. When all 3 signals were included in an OLS regression, only $DUR$ was statistically significant at 1\% level, while $GP\_CZ$ was statistically significant at 5\% level and $BM\_CZ$ disappeared. Examining the regression results of $ME$-weighted WLS, the magnitude and statistical significance of $DUR$ declined, suggesting that the short duration premium is not as strong in firms with high market capitalization. However, this change could be merely due to a construction issue as I did not exclude microcaps nor winsorize returns as done by Goncalves (2021b). 
+Looking at the results of OLS regressions, $\widehat{b}_{DUR}$ is negative and statistically significant across all regression specifications, which is consistent with the existence of the short duration premium (Goncalves, 2021b). In particular, firms with high ranks in $DUR$ (long duration stocks) tend to generate lower future returns than short duration counterparts. Controlling for both $GP\_CZ$ and $BM\_CZ$, $DUR$'s magnitude remained meaningful at -0.85\%, far outweighing the other two signals. While $BM\_CZ$ and $GP\_CZ$ were statistically signifincant in their standalone and joint regressions, these premia vanished after controlling for $DUR$. When all 3 signals were included in an OLS regression, only $DUR$ was statistically significant at 1\% level, while $GP\_CZ$ was statistically significant at 5\% level and $BM\_CZ$ disappeared. Examining the regression results of $ME$-weighted WLS, the magnitude and statistical significance of $DUR$ declined, suggesting that the short duration premium is not as strong in firms with high market capitalization. However, this difference could be merely due to a construction issue as I did not exclude microcaps nor winsorize returns as done by Goncalves (2021b). 
 
 \section*{Question 4}
 \subsection*{4 (a)} 
-I select Fama-Bliss discount bonds with maturities of 1-5 years by first, filtering those with KYTREASNOX from 2000047 to 2000051 and, second, verifying the mapping with 5 unique combinations of KYTREASNOX and TTERMLBL. Obtaining the decimal yield by dividing TMYTM by 100, I calculate the following: 
+I selected Fama-Bliss discount bonds with maturities of 1-5 years by first, filtering those with KYTREASNOX from 2000047 to 2000051 and, second, verifying the mapping with 5 unique combinations of KYTREASNOX and TTERMLBL. Obtaining the decimal yield by dividing TMYTM by 100, I calculated the following: 
 \begin{enumerate}
     \item For $H = 1,\ldots,5$, log yield $y_t^{H} = log(1+Y_t^{H})$
     \item For $H = 2,\ldots,5$, log forward rate $f_t^{H} = H \cdot y_t^{H} - (H-1) \cdot y_t^{H-1}$ with $f_t^{1} = y_t^{1}$
     \item For $H = 2,\ldots,5$, log annual return $r_t^{H} = H \cdot y_{t-1}^{H} - (H-1) \cdot y_t^{H-1}$, with $r_t^{1} = y_{t-1}^{1}$, where $y_{t-1}^{1}$ is the 12-month lag of $y_t^{1}$.
 \end{enumerate}
 
-By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking their averages across H = 2,...,5, I have the following table: 
+By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking their averages across H = 2,...,5, I obtained the following table: 
 
 \begin{table}[H]
   \centering
@@ -734,12 +737,12 @@ By subtracting $y_t^{1}, f_t^{1}$ and $r_t^{1}$ from these variables and taking 
 \end{table}
 
 \subsection*{4 (b)} 
-For $H = 2,\ldots,5$, I estimate the OLS regression of long-term excess returns on excess log yield as follows: 
+For $H = 2,\ldots,5$, I estimated the OLS regression of long-term excess returns on excess log yield as follows: 
 \[
     (1/H) \cdot xr_{t \to t+H}^{H} = a^{H} + b^{H} \cdot xy_{t}^{H} + e_{t}^{H}
 \]
 
-where the hold-to-maturity excess return is $xr_{t \to t+H}^{H} = \sum_{h=1}^{H} xr_{t+h}^{(H-h+1)}$. Using a common set of 811-month sample from June 1952 to December 2019 and the Hansen-Hodrick standard errors with $L = Overlap = 12H-1$, I derive the estimated $b^{H}$, t-stat, and $R^2$ for each maturity as follows: 
+where the hold-to-maturity excess return is $xr_{t \to t+H}^{H} = \sum_{h=1}^{H} xr_{t+h}^{(H-h+1)}$. Using a common set of 811-month sample from June 1952 to December 2019 and the Hansen-Hodrick standard errors with $L = Overlap = 12H-1$, I derived the estimated $b^{H}$, t-stat, and $R^2$ for each maturity as follows: 
 \begin{table}[H]
   \centering
   \caption{Predictive regressions for hold-to-maturity excess bond returns}
