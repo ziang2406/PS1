@@ -220,6 +220,9 @@ regression_panel <- merge(
   all = FALSE,
   sort = FALSE
 )
+regression_panel <- regression_panel[
+  RETURN_YYYYMM >= 197307L & RETURN_YYYYMM <= 202412L
+]
 
 stopifnot(
   anyDuplicated(
@@ -228,7 +231,11 @@ stopifnot(
   ) == 0L,
   all(regression_panel$RETURN_YYYYMM ==
     next_yyyymm(regression_panel$FORMATION_YYYYMM)),
-  all(is.finite(regression_panel$XRET_ADJ))
+  all(is.finite(regression_panel$XRET_ADJ)),
+  uniqueN(regression_panel$RETURN_YYYYMM) == 618L,
+  min(regression_panel$RETURN_YYYYMM) == 197307L,
+  max(regression_panel$RETURN_YYYYMM) == 202412L,
+  all(diff(sort(unique(month_number(regression_panel$RETURN_YYYYMM)))) == 1L)
 )
 
 rm(formation_sample, next_returns, panel)
@@ -339,6 +346,12 @@ stopifnot(
   all(is.finite(monthly_regressions$INTERCEPT)),
   all(is.finite(monthly_regressions$R_SQUARED)),
   all(monthly_regressions$N_OBS > 4L),
+  monthly_regressions[
+    ,
+    all(.N == 618L & min(RETURN_YYYYMM) == 197307L &
+      max(RETURN_YYYYMM) == 202412L),
+    by = .(METHOD, SPECIFICATION)
+  ][, all(V1)],
   monthly_regressions[METHOD == "WLS", all(abs(WEIGHT_SUM - 1) < 1e-12)],
   monthly_regressions[METHOD == "OLS", all(is.na(WEIGHT_SUM))]
 )

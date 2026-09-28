@@ -714,3 +714,28 @@
 - **Substantive mathematical, economic, or empirical suggestions:** None beyond identifying the initially missing tie convention. All empirical choices implemented came from `prompt/3d.md` and its user-authored revision.
 - **Type of assistance:** Empirical implementation; code debugging; formatting/visualization.
 - **Grouped minor subsequent requests:** No as of initial close; the clarification was part of the still-open interaction after the required pause, not a grouped follow-up.
+
+## TP interaction `3d-05e800d05223` — `2026-09-28T13:04:01-04:00`
+
+- **Problem set item:** `3d`
+- **Substantive prompt (verbatim):**
+
+  ~~~text
+  For consistency, restrict the sample for all regressions from July 1973-December 2024 using 618 months 
+  ~~~
+
+- **User clarification (verbatim):**
+
+  ~~~text
+  I've saved it 
+  ~~~
+
+- **Purpose:** Impose the student-selected common July 1973 through December 2024 sample on every Question 3d OLS and WLS specification.
+- **Git commit before interaction:** `05e800d05223eb8b7952c6fbcc1c4c506c3326f7`
+- **Assistance provided:** Identified that the requested sample decision was not yet recorded in the repository specification and paused until the user saved it in `prompt/3d.md`. Updated `code/3d.R` to restrict the realized-return regression panel to July 1973 through December 2024 before estimating any model. Added assertions for a continuous 618-month master return window and for exactly 618 monthly regressions spanning those dates in every method-specification combination. Reran the complete pipeline, reducing `code/3d_regressions.csv` from 9,444 to 8,652 monthly regression records and regenerating `figures/3d.tex` with common-sample estimates and inference. Verified all 14 OLS/WLS specification series contain exactly 618 unique months, all begin in July 1973 and end in December 2024, and every WLS monthly weight sum is within approximately `1e-14` of one. Compiled the updated table twice in an isolated one-page LaTeX document with no warnings, errors, or overfull/underfull boxes on the final pass, and visually inspected the rendering.
+- **Files inspected:** `.agents/skills/tp/SKILL.md`; `.agents/skills/tp/references/course-ai-policy.md`; `.agents/skills/tp/scripts/snapshot.sh` (executed); `.agents/skills/tp/scripts/verify_log_append_only.sh` (executed after this append); `Problem Sets AI Policy[57].pdf` (existence verified); `AI_INTERACTIONS.md`; `prompt/3d.md`; `code/3d.R`; `code/3d_regressions.csv`; `figures/3d.tex`; `cleaned_CRSP.csv`; `GP.csv`; `BMdec.csv`; `FF.csv`; `FirmLevelDur.csv`; `solution.tex` and `solution.pdf` (pre-existing change identification only).
+- **Files directly modified:** `prompt/3d.md` (user-authored sample restriction preserved); `code/3d.R`; `code/3d_regressions.csv`; `figures/3d.tex`; `AI_INTERACTIONS.md`. The temporary wrapper `tmp_3d_common_sample_test.tex` was created and deleted during validation and is not present in the final workspace.
+- **Errors, omissions, or ambiguities identified:** The requested common-window decision was initially absent from `prompt/3d.md`; the user resolved this by saving the explicit July 1973 through December 2024, 618-month restriction before implementation. R and Perl emitted harmless locale warnings; they did not affect calculations or rendering. No unresolved ambiguity remains.
+- **Substantive mathematical, economic, or empirical suggestions:** None. The common sample window was selected and documented by the user.
+- **Type of assistance:** Empirical implementation; code debugging; formatting/visualization.
+- **Grouped minor subsequent requests:** No as of initial close; the saved-prompt confirmation was part of this still-open interaction after the required policy pause.
