@@ -956,7 +956,20 @@ latex_escape <- function(x) {
   )
 }
 
-latex_lines <- character()
+latex_lines <- c(
+  "\\begin{table}[H]",
+  "  \\centering",
+  "  \\caption{HML portfolio results}",
+  "  \\label{tab:3c_hml}",
+  "  \\begin{tabular}{lrrrrr}",
+  "    \\hline",
+  paste0(
+    "    Signal & Mean HML & Newey--West SE & $t$-statistic ",
+    "& Lag & $T$ \\\\"
+  ),
+  "    \\hline"
+)
+
 for (type_code in portfolio_types$TYPE_CODE) {
   table_data <- hml_summary[TYPE_CODE == type_code]
   table_title <- portfolio_types[
@@ -966,20 +979,11 @@ for (type_code in portfolio_types$TYPE_CODE) {
 
   latex_lines <- c(
     latex_lines,
-    "\\begin{table}[H]",
-    "  \\centering",
     sprintf(
-      "  \\caption{HML results: %s}",
+      "    \\multicolumn{6}{l}{\\textit{Panel %s: %s}} \\\\",
+      type_code,
       latex_escape(table_title)
-    ),
-    sprintf("  \\label{tab:3c_%s_hml}", type_code),
-    "  \\begin{tabular}{lrrrrr}",
-    "    \\hline",
-    paste0(
-      "    Signal & Mean HML & Newey--West SE & $t$-statistic ",
-      "& Lag & $T$ \\\\"
-    ),
-    "    \\hline"
+    )
   )
 
   for (row_index in seq_len(nrow(table_data))) {
@@ -998,14 +1002,18 @@ for (type_code in portfolio_types$TYPE_CODE) {
     )
   }
 
-  latex_lines <- c(
-    latex_lines,
-    "    \\hline",
-    "  \\end{tabular}",
-    "\\end{table}",
-    ""
-  )
+  if (type_code != tail(portfolio_types$TYPE_CODE, 1L)) {
+    latex_lines <- c(latex_lines, "    \\hline")
+  }
 }
+
+latex_lines <- c(
+  latex_lines,
+  "    \\hline",
+  "  \\end{tabular}",
+  "\\end{table}",
+  ""
+)
 
 writeLines(latex_lines, "figures/3c_hml.tex", useBytes = TRUE)
 
