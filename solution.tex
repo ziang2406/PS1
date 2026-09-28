@@ -525,9 +525,43 @@ I kept the constructed June $BM$ signal fixed from June of year t through May of
 \end{figure}
 
 \subsection*{3 (c)} 
+Following the sorting methods, I constructed 5 types of decile portfolios for each Chen-Zimmermann signal and retrieved their average monthly excess returns as follows: 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{figures/3c_i.png}
+    \label{fig:q16}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{figures/3c_ii.png}
+    \label{fig:q17}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{figures/3c_iii.png}
+    \label{fig:q18}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{figures/3c_iv.png}
+    \label{fig:q19}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{figures/3c_v.png}
+    \label{fig:q20}
+\end{figure}
+
+Across all scatterplots, higher decile portfolios have higher average excess returns than lower decile portfolios for each signal, which is consistent with their underlying principles. For instance, the book-to-market $BM\_CZ$ signal represents the value premium, positing that firms with high $BM\_CZ$ (value firms) tends to generate higher future returns than firms with low $BM\_CZ$ (growth firms). $MOM\_CZ$ captures the momemtum signal via returns from month t-12 to t-1 and suggests that recent winners (high $MOM\_CZ$) are likely to present higher future returns than recent losers (low $MOM\_CZ$). Finally, the profitability signal, $GP\_CZ$, suggests that firms with high gross profits/total assets tends to generate higher future returns than counterparts with low gross profits/ total assets. In addition, I also calculated the average HML excess returns of 15 HML portfolios for each pair of signal - portfolio construction method.  
+
 \begin{table}[H]
   \centering
-  \caption{HML portfolio results}
+  \caption{Average excess HML portfolio returns \& t-statistic for each signal - portfolio construction pair}
   \label{tab:3c_hml}
   \begin{tabular}{lrrrrr}
     \hline
@@ -560,6 +594,8 @@ I kept the constructed June $BM$ signal fixed from June of year t through May of
     \hline
   \end{tabular}
 \end{table}
+
+Again, the mean HML excess returns in decimals are positive across all signals and sorting methods, reinforcing the idea that higher value, profitability, and momentum signals imply higher future returns. However, their magnitudes and statistical significance differ. Only $GP\_CZ$ is the most robust across 5 types of portfolios with average HML excess returns ranging from 0.30\% to 0.99\%. Meanwhile, $BM\_CZ$ is only statistically significant in equally weighted portfolios, suggesting that their predictability power is stronger among smaller firms. $MOM\_CZ$ is statistically insignificant with almost zero average HML excess returns in equally weighted, annually rebalanced portfolios with NYSE breakpoints. 
 
 \section*{Question 4}
 \subsection*{4 (a)} 

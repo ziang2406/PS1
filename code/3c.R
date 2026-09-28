@@ -836,9 +836,9 @@ for (type_code in portfolio_types$TYPE_CODE) {
       legend.position = "bottom",
       panel.grid.minor = element_blank(),
       panel.border = element_rect(
-        color = "darkgray",
+        color = "black",
         fill = NA,
-        linewidth = 0.5
+        linewidth = 1
       ),
       plot.background = element_rect(fill = "white", color = NA),
       panel.background = element_rect(fill = "white", color = NA),
