@@ -45,6 +45,13 @@ signal_display_names <- c(
   GP_CZ = "GP_CZ"
 )
 
+fixed_y_axes_percent <- list(
+  ii = list(breaks = seq(0.3, 1.5, by = 0.2), limits = c(0.3, 1.5)),
+  iii = list(breaks = seq(-0.1, 1.3, by = 0.2), limits = c(-0.1, 1.3)),
+  iv = list(breaks = seq(0.2, 1.0, by = 0.2), limits = c(0.2, 1.0)),
+  v = list(breaks = seq(0.3, 1.4, by = 0.2), limits = c(0.3, 1.4))
+)
+
 signal_colors <- c(
   BM_CZ = "blue",
   MOM_CZ = "red",
@@ -778,6 +785,13 @@ for (type_code in portfolio_types$TYPE_CODE) {
     y_top <- y_top + y_increment
   }
   y_breaks <- seq(y_base, y_top, by = y_increment)
+
+  if (type_code %in% names(fixed_y_axes_percent)) {
+    fixed_axis <- fixed_y_axes_percent[[type_code]]
+    y_breaks <- fixed_axis$breaks / 100
+    y_base <- fixed_axis$limits[1L] / 100
+    y_top <- fixed_axis$limits[2L] / 100
+  }
 
   portfolio_plot <- ggplot(
     plot_data,
