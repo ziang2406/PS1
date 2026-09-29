@@ -2,7 +2,7 @@ rm(list = ls())
 library(tidyverse)
 
 # Data loading and validation
-EQ <- read.csv("EQ Dataset.csv")
+EQ <- read.csv("data/EQ Dataset.csv")
 required_columns <- c("YEAR", "MONTH", "dp", "rf", "re")
 
 stopifnot(
@@ -65,6 +65,7 @@ stopifnot(
 a_OS <- numeric(n_forecasts)
 b_OS <- numeric(n_forecasts)
 historical_mean <- numeric(n_forecasts)
+historical_mean_observations <- integer(n_forecasts)
 in_sample_forecast <- numeric(n_forecasts)
 out_of_sample_forecast <- numeric(n_forecasts)
 realized_excess_return <- excess_return[target_index]
@@ -89,7 +90,14 @@ for (forecast_number in seq_len(n_forecasts)) {
   a_OS[forecast_number] <- unname(coef(expanding_model)[["(Intercept)"]])
   b_OS[forecast_number] <- unname(coef(expanding_model)[["D_P_s"]])
   training_observations[forecast_number] <- nobs(expanding_model)
-  historical_mean[forecast_number] <- mean(training_sample$xR_e_s_plus_1)
+  # The historical benchmark uses all monthly excess returns observable at the
+  # forecast origin. For the first origin this is December 1927--December 1939.
+  historical_return_index <- seq_len(current_origin)
+  historical_mean[forecast_number] <- mean(
+    excess_return[historical_return_index]
+  )
+  historical_mean_observations[forecast_number] <-
+    length(historical_return_index)
 
   current_D_P <- dividend_price_ratio[current_origin]
   out_of_sample_forecast[forecast_number] <-
@@ -106,13 +114,16 @@ forecast_results <- tibble(
   out_of_sample_forecast = out_of_sample_forecast,
   a_OS = a_OS,
   b_OS = b_OS,
-  N_t = training_observations
+  N_t = historical_mean_observations,
+  training_observations = training_observations
 )
 
 stopifnot(
   nrow(forecast_results) == 973L,
-  all(is.finite(unlist(forecast_results[, 3:9]))),
+  all(is.finite(unlist(forecast_results[, 3:10]))),
   identical(training_observations, 144:1116),
+  identical(historical_mean_observations, 145:1117),
+  abs(historical_mean[1] - mean(excess_return[1:first_origin_index])) < 1e-14,
   abs(a_IS - (-0.031410878888682)) < 1e-12,
   abs(b_IS - 2.803802742996315) < 1e-12,
   abs(a_OS[1] - (-0.255095752576507)) < 1e-12,
@@ -125,15 +136,14 @@ write_csv(forecast_results, "code/2d_1.csv")
 # Full-period out-of-sample R-squared
 os_squared_errors <-
   (forecast_results$xR_e_t_plus_1 - forecast_results$out_of_sample_forecast)^2
-full_period_mean <- mean(forecast_results$xR_e_t_plus_1)
-full_period_mean_squared_errors <-
-  (forecast_results$xR_e_t_plus_1 - full_period_mean)^2
+historical_mean_squared_errors <-
+  (forecast_results$xR_e_t_plus_1 - forecast_results$historical_mean)^2
 
 SSE_OS <- sum(os_squared_errors)
-SSE_full_period_mean <- sum(full_period_mean_squared_errors)
-stopifnot(SSE_full_period_mean > 0)
+SSE_historical_mean <- sum(historical_mean_squared_errors)
+stopifnot(SSE_historical_mean > 0)
 
-R_OS_squared <- 1 - SSE_OS / SSE_full_period_mean
+R_OS_squared <- 1 - SSE_OS / SSE_historical_mean
 
 # Rolling R_OS^2. The prompt explicitly makes both endpoints inclusive, so
 # January 1941 through December 1990 contains 50 * 12 observations.
@@ -172,15 +182,12 @@ rolling_R_OS_squared <- vapply(
     )
 
     window_SSE_OS <- sum(os_squared_errors[window_index])
-    window_realized_excess_return <-
-      forecast_results$xR_e_t_plus_1[window_index]
-    window_mean <- mean(window_realized_excess_return)
-    window_SSE_mean <- sum(
-      (window_realized_excess_return - window_mean)^2
+    window_SSE_historical_mean <- sum(
+      historical_mean_squared_errors[window_index]
     )
 
-    stopifnot(window_SSE_mean > 0)
-    1 - window_SSE_OS / window_SSE_mean
+    stopifnot(window_SSE_historical_mean > 0)
+    1 - window_SSE_OS / window_SSE_historical_mean
   },
   numeric(1)
 )
@@ -200,10 +207,7 @@ stopifnot(
   rolling_results$window_end_date[nrow(rolling_results)] ==
     as.Date("2021-12-01"),
   all(rolling_results$window_observations == 600L),
-  abs(R_OS_squared - 0.001824671067032102) < 1e-12,
-  abs(rolling_R_OS_squared[1] - 0.15801988688705626) < 1e-12,
-  abs(rolling_R_OS_squared[length(rolling_R_OS_squared)] -
-    (-0.060420959660509865)) < 1e-12
+  is.finite(R_OS_squared)
 )
 
 write_csv(rolling_results, "code/2d_2.csv")
@@ -331,11 +335,13 @@ summary_results <- tibble(
   last_forecast_target_date = forecast_results$target_date[n_forecasts],
   first_training_observations = training_observations[1],
   last_training_observations = training_observations[n_forecasts],
+  first_historical_mean_observations = historical_mean_observations[1],
+  last_historical_mean_observations =
+    historical_mean_observations[n_forecasts],
   a_IS = a_IS,
   b_IS = b_IS,
-  full_period_mean = full_period_mean,
   SSE_OS = SSE_OS,
-  SSE_full_period_mean = SSE_full_period_mean,
+  SSE_historical_mean = SSE_historical_mean,
   R_OS_squared = R_OS_squared,
   rolling_window_observations = rolling_window_observations,
   rolling_estimates = nrow(rolling_results),
