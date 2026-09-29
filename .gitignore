@@ -14,11 +14,3 @@
 /Mom12m.csv
 /GP.csv
 /cleaned_CRSP.csv
-
-# Large datasets after the repository was reorganized into data/.
-/data/CRSP_monthly.csv
-/data/Fundamental Annual.csv
-/data/BMdec.csv
-/data/Mom12m.csv
-/data/GP.csv
-/data/cleaned_CRSP.csv

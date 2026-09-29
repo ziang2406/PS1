@@ -1,0 +1,6 @@
+/data/CRSP_monthly.csv filter=lfs diff=lfs merge=lfs -text
+"/data/Fundamental Annual.csv" filter=lfs diff=lfs merge=lfs -text
+/data/BMdec.csv filter=lfs diff=lfs merge=lfs -text
+/data/Mom12m.csv filter=lfs diff=lfs merge=lfs -text
+/data/GP.csv filter=lfs diff=lfs merge=lfs -text
+/data/cleaned_CRSP.csv filter=lfs diff=lfs merge=lfs -text
