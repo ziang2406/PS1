@@ -7,6 +7,7 @@
 \usepackage{booktabs}
 \usepackage{xcolor}
 \usepackage{float}
+\usepackage{natbib}
 
 \pdfminorversion=4
 \pdfobjcompresslevel=0
@@ -94,7 +95,7 @@ Given that $\mathbb{E}_t[dp_t] = dp_t$, we take conditional expectation on both 
     \tag*{\color{red}(1.2)}
 \end{align}
 
-Since $e^{\overline{dp}}$ is always positive, we have $0 < \kappa < 1$. Therefore, as $H \to \infty$, $\kappa^H \to 0$. In addition, we also need to impose No-Bubble Condition such that $\lim_{H \to \infty} \kappa^H \cdot \mathbb{E}_t[dp_{t+H}] = 0$. Giglio, Maggiori, and Stroebel (2016) indeed shows that there were no systemic deviations in the discounts of extremely long leaseholds to otherwise identical freeholds in the U.K. and Singapore housing markets, thus indicating no rational bubbles. Consequently, letting $H \to \infty$, Equation {\color{red}(1.2)} can be simplified as follows:
+Since $e^{\overline{dp}}$ is always positive, we have $0 < \kappa < 1$. Therefore, as $H \to \infty$, $\kappa^H \to 0$. In addition, we also need to impose No-Bubble Condition such that $\lim_{H \to \infty} \kappa^H \cdot \mathbb{E}_t[dp_{t+H}] = 0$. \cite{https://doi.org/10.3982/ECTA13447} indeed shows that there were no systemic deviations in the discounts of extremely long leaseholds to otherwise identical freeholds in the U.K. and Singapore housing markets, thus indicating no rational bubbles. Consequently, letting $H \to \infty$, Equation {\color{red}(1.2)} can be simplified as follows:
 \begin{align}
     dp_t
     &= \frac{-\kappa_0}{1-\kappa}+ \sum_{h=1}^{\infty} \kappa^{h-1} \cdot \mathbb{E}_t[r_{e,t+h}] - \sum_{h=1}^{\infty} \kappa^{h-1} \cdot \mathbb{E}_t[\Delta d_{t+h}]
@@ -460,7 +461,7 @@ $R^{2}_{OS2}$, using the same formula as question 2(d), is 0.0321 with the 50-ye
     \label{fig:q7}
 \end{figure}
 
-Given these results, we can clearly see that the steady state constraint has significantly improved the out-of-sample $R^2$ $(0.0321 > -0.00611)$. Looking over the horizons, the rolling $R^2$ using the fixed coefficient constraint also never dipped below 0, suggesting that imposing restrictions from steady-state valuation model can improve OS predictability. This makes sense as less estimation errors come at the expense of less flexibility in estimating regression coefficients. This conclusion is consistent with the view of Campbell \& Thompson (2008). 
+Given these results, we can clearly see that the steady state constraint has significantly improved the out-of-sample $R^2$ $(0.0321 > -0.00611)$. Looking over the horizons, the rolling $R^2$ using the fixed coefficient constraint also never dipped below 0, suggesting that imposing restrictions from steady-state valuation model can improve OS predictability. This makes sense as less estimation errors come at the expense of less flexibility in estimating regression coefficients. This conclusion is consistent with the view of \cite{campbell2008predicting}. 
     
 \section*{Question 3}
 \subsection*{3 (a)} 
@@ -469,7 +470,7 @@ Imposing standard restrictions, I restricted the sample of CRSP monthly stocks t
     MOM_{j, \tau} = \prod_{t=1}^{12}  (1+ RET\_ADJ_{j,\tau - t}) - 1 
 \]
 
-To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_ADJ}_{\tau}$ is available and that there are 12 chronologically ordered observations of ${RET\_ADJ}_{\tau}$ corresponding to 12 calender months. For companies with available $DLSTCD$ and $DLRET$, there is no subsequent obeservation. Then, I proceeded to match the newly constructed CRSP sample with the Chen \& Zimmermann (2022) Mom12m dataset on $PERMNO$ and $YYYYMM$. Using an inner merge, I retrieved 2,410,492 pairs of $MOM$ and $MOM\_CZ$ and ran 739 monthly cross-firm regressions in the sample as follows:
+To preserve the construction of MOM, I verified that for each $PERMNO$, ${RET\_ADJ}_{\tau}$ is available and that there are 12 chronologically ordered observations of ${RET\_ADJ}_{\tau}$ corresponding to 12 calender months. For companies with available $DLSTCD$ and $DLRET$, there is no subsequent obeservation. Then, I proceeded to match the newly constructed CRSP sample with the \cite{chenzimmermann2025data} Mom12m dataset on $PERMNO$ and $YYYYMM$. Using an inner merge, I retrieved 2,410,492 pairs of $MOM$ and $MOM\_CZ$ and ran 739 monthly cross-firm regressions in the sample as follows:
 \[
     MOM\_CZ_{j, \tau} = a_\tau + b_\tau \cdot MOM_{j, \tau} + e_{j, \tau}
 \]
@@ -601,7 +602,7 @@ Across all scatterplots, higher decile portfolios have higher average excess ret
 Again, the mean HML excess returns in decimals are positive across all signals and sorting methods, reinforcing the idea that higher value, profitability, and momentum signals imply higher future returns. However, their magnitudes and statistical significance differ. Only $GP\_CZ$ is the most robust across 5 types of portfolios with average HML excess returns ranging from 0.30\% to 0.99\%. Meanwhile, $BM\_CZ$ is only statistically significant in equally weighted portfolios, suggesting that their predictability power is stronger among smaller firms. $MOM\_CZ$ is statistically insignificant with almost zero average HML excess returns in equally weighted, annually rebalanced portfolios with NYSE breakpoints. 
 
 \subsection*{3 (d)} 
-I used a common sample of 618 months from July 1973 to December 2024 by doing left join of $DUR$ from Goncalves (2021b), $GP\_CZ$ and $BM\_CZ$ from Chen \& Zimmermann (2022), $RF$ from Fama \& French's 3 Factor Model (1993) with the CRSP monthly $XRET\_ADJ$ constructed in part (a) on $PERMNO$ and $DUR\_YEAR$. In particular, $DUR\_YEAR$ denotes that $DUR$ is fixed for 12 calender months from June of year t to May of year t+1, which is consistent with the timing of $BM\_CZ$. For each signal $X$, within each month $\tau$, I sorted $N_{\tau}$ stocks in an ascending order and assigned its rank in the cross-sectional distribution of $X$ as $R_{j, \tau} = rank(X_{j, \tau})$. Then, I calculated its respective cross-sectional percentile rank as $Q_{j, \tau} = R_{j, \tau}/ N_\tau$ where $Q_{j, \tau} \in (0,1]$. I proceeded to estimate 7 monthly cross-sectional regressions using both OLS and WLS as follows: 
+I used a common sample of 618 months from July 1973 to December 2024 by doing left join of $DUR$ from \cite{goncalves2021short}, $GP\_CZ$ and $BM\_CZ$ from \cite{ChenZimmermann2022}, $RF$ from \cite{fama1993common} with the CRSP monthly $XRET\_ADJ$ constructed in part (a) on $PERMNO$ and $DUR\_YEAR$. In particular, $DUR\_YEAR$ denotes that $DUR$ is fixed for 12 calender months from June of year t to May of year t+1, which is consistent with the timing of $BM\_CZ$. For each signal $X$, within each month $\tau$, I sorted $N_{\tau}$ stocks in an ascending order and assigned its rank in the cross-sectional distribution of $X$ as $R_{j, \tau} = rank(X_{j, \tau})$. Then, I calculated its respective cross-sectional percentile rank as $Q_{j, \tau} = R_{j, \tau}/ N_\tau$ where $Q_{j, \tau} \in (0,1]$. I proceeded to estimate 7 monthly cross-sectional regressions using both OLS and WLS as follows: 
 \[
 \begin{aligned}
 \text{(i)}\quad
@@ -707,7 +708,7 @@ Then, I computed the Newey-West (1987, 1994) standard errors to account for auto
   \end{minipage}
 \end{table}
 
-Looking at the results of OLS regressions, $\widehat{b}_{DUR}$ is negative and statistically significant across all regression specifications, which is consistent with the existence of the short duration premium (Goncalves, 2021b). In particular, firms with high ranks in $DUR$ (long duration stocks) tend to generate lower future returns than short duration counterparts. Controlling for both $GP\_CZ$ and $BM\_CZ$, $DUR$'s magnitude remained meaningful at -0.85\%, far outweighing the other two signals. While $BM\_CZ$ and $GP\_CZ$ were statistically signifincant in their standalone and joint regressions, these premia vanished after controlling for $DUR$. When all 3 signals were included in an OLS regression, only $DUR$ was statistically significant at 1\% level, while $GP\_CZ$ was statistically significant at 5\% level and $BM\_CZ$ disappeared. Examining the regression results of $ME$-weighted WLS, the magnitude and statistical significance of $DUR$ declined, suggesting that the short duration premium is not as strong in firms with high market capitalization. However, this difference could be merely due to a construction issue as I did not exclude microcaps nor winsorize returns as done by Goncalves (2021b). 
+Looking at the results of OLS regressions, $\widehat{b}_{DUR}$ is negative and statistically significant across all regression specifications, which is consistent with the existence of the short duration premium \cite{goncalves2021short}. In particular, firms with high ranks in $DUR$ (long duration stocks) tend to generate lower future returns than short duration counterparts. Controlling for both $GP\_CZ$ and $BM\_CZ$, $DUR$'s magnitude remained meaningful at -0.85\%, far outweighing the other two signals. While $BM\_CZ$ and $GP\_CZ$ were statistically signifincant in their standalone and joint regressions, these premia vanished after controlling for $DUR$. When all 3 signals were included in an OLS regression, only $DUR$ was statistically significant at 1\% level, while $GP\_CZ$ was statistically significant at 5\% level and $BM\_CZ$ disappeared. Examining the regression results of $ME$-weighted WLS, the magnitude and statistical significance of $DUR$ declined, suggesting that the short duration premium is not as strong in firms with high market capitalization. However, this difference could be merely due to a construction issue as I did not exclude microcaps nor winsorize returns as done by Goncalves (2021b). 
 
 \subsection*{3 (e)}
 I upheld the same merging techniques, timing decisions, and duplicate protocols in the previous parts. Similar to part (c), I constructed signal-specific decile portfolios using NYSE breakpoints for the entire valid stock universe. As a result, at time $\tau$, a stock has 3 decile assigments, namely $D_{j,\tau}^{X}$, and belongs to 1 of 10 decile portfolios, namely $P_{i, \tau}^{X}$ for $i = 1,\ldots,10$ and $X \in \{GP\_CZ, BM\_CZ, DUR\}$. For each decile portfolio $P$ at time $\tau$, I calculated excess returns using equal-weight and $ME$-weight methods and the average signal decile values as $Dec_{P, \tau}^{X} = \frac{1}{N_{P, \tau}^{X}} \cdot \sum_{j \in P} D_{j,\tau}^{X}$. Then, I proceeded to run the following multivariate panel regressions of excess returns on average portfolio deciles: 
@@ -889,7 +890,7 @@ Using a common set of 811-month sample from June 1952 to December 2019 and the N
 Similar to part (b), a steeper forward spread predicts higher 1-year excess bond returns across all maturities with the highest predictability in H = 4 years. In addition, I also verified that $\hat{b}^{(2)}$ in Equation (4.2) is equal to that in Equation (4.3), following the steps in Footnote 15. 
 
 \subsection*{4 (d)} 
-Following Cochrane and Piazzesi (2005), I regressed the average 1-year excess bond returns across maturities on a linear combination of forward rates for $H = 1,\ldots,5$, using 859 observations from June 1952 to December 2023 as follows: 
+Following \cite{cochrane2005bond}, I regressed the average 1-year excess bond returns across maturities on a linear combination of forward rates for $H = 1,\ldots,5$, using 859 observations from June 1952 to December 2023 as follows: 
 \[
     \frac{1}{4} \cdot \sum_{H=2}^{5} xr_{t+1}^{H} = \theta_{0} + \sum_{H=1}^{5} \theta_{h} \cdot f_{t}^{H} + u_t
 \]
@@ -938,4 +939,6 @@ Using a set of 859 observations from June 1952 to December 2023 and the Newey-We
 
 In comparison to the individual regressions of excess returns on log yield spreads and log forward spreads in part (b) and part (c), $cp_t$ significantly improves the predictability of excess returns, with t-stat and $R^{2}$ consistently above 1.96 and 12 \% across all maturities. Most importantly, $cp_t$ seems to carry additional information that helps it better predict 1-year excess bond returns with higher maturities. 
 
+ \bibliographystyle{apalike} 
+ \bibliography{materials/references}
 \end{document}
