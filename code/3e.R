@@ -2,6 +2,7 @@ rm(list = ls())
 
 library(data.table)
 library(sandwich)
+library(plm)
 
 month_number <- function(yyyymm) {
   12L * (yyyymm %/% 100L) + (yyyymm %% 100L)
@@ -385,15 +386,24 @@ for (weighting in c("VW", "EW")) {
       specification_definition$regressors,
       response = "XRET"
     )
-    pooled_model <- lm(formula, data = regression_data)
-    dk_lag <- floor(4 * (618 / 100)^(2 / 9))
-    dk_covariance <- vcovPL(
+    panel_data <- pdata.frame(
+      regression_data,
+      index = c("PORTFOLIO_ID", "RETURN_YYYYMM"),
+      drop.index = FALSE,
+      row.names = FALSE
+    )
+    pooled_model <- plm(
+      formula,
+      data = panel_data,
+      model = "pooling"
+    )
+    dk_lag <- floor(uniqueN(regression_data$RETURN_YYYYMM)^(1 / 4))
+    dk_covariance <- vcovSCC(
       pooled_model,
-      cluster = regression_data[, .(PORTFOLIO_ID, RETURN_YYYYMM)],
-      kernel = "Bartlett",
-      lag = "NW1994",
-      adjust = FALSE,
-      aggregate = TRUE
+      type = "HC0",
+      maxlag = dk_lag,
+      inner = "cluster",
+      wj = function(j, maxlag) 1 - j / (maxlag + 1)
     )
     standard_errors <- sqrt(diag(dk_covariance))
     estimates <- coef(pooled_model)
@@ -417,15 +427,17 @@ for (weighting in c("VW", "EW")) {
             fifelse(p_values[coefficient_name] < 0.10, "*", "")
           )
         ),
-        R_SQUARED = summary(pooled_model)$r.squared,
+        R_SQUARED = unname(summary(pooled_model)$r.squared["rsq"]),
         N_OBS = nobs(pooled_model),
         N_MONTHS = uniqueN(regression_data$RETURN_YYYYMM),
         N_PORTFOLIOS = uniqueN(regression_data$PORTFOLIO_ID),
         FIRST_RETURN_YYYYMM = min(regression_data$RETURN_YYYYMM),
         LAST_RETURN_YYYYMM = max(regression_data$RETURN_YYYYMM),
         DK_KERNEL = "Bartlett",
-        DK_LAG_RULE = "NW1994",
+        DK_LAG_RULE = "floor(T^(1/4))",
         DK_LAG = dk_lag,
+        DK_TYPE = "HC0",
+        DK_INNER = "cluster",
         DK_ADJUST = FALSE
       )
     }
@@ -442,7 +454,9 @@ stopifnot(
   all(regression_results$N_MONTHS == 618L),
   all(regression_results$FIRST_RETURN_YYYYMM == 197307L),
   all(regression_results$LAST_RETURN_YYYYMM == 202412L),
-  all(regression_results$DK_LAG == 5L),
+  all(regression_results$DK_LAG == 4L),
+  all(regression_results$DK_TYPE == "HC0"),
+  all(regression_results$DK_INNER == "cluster"),
   !any(regression_results$DK_ADJUST)
 )
 fwrite(regression_results, "code/3e_regressions.csv")
@@ -552,7 +566,7 @@ latex_lines <- c(
   "  \\end{tabular}%",
   "  }",
   "  \\begin{minipage}{\\textwidth}",
-  "  \\footnotesize \\textit{Notes:} The sample is July 1973--December 2024. Driscoll--Kraay $t$-statistics are in parentheses and use a Bartlett kernel, the automatic \\texttt{NW1994} lag rule (five lags), and no finite-sample adjustment. $^{***}$, $^{**}$, and $^{*}$ denote significance at the 1\\%, 5\\%, and 10\\% levels, respectively.",
+  "  \\footnotesize \\textit{Notes:} The sample is July 1973--December 2024. Driscoll--Kraay $t$-statistics are in parentheses and use \\texttt{plm::vcovSCC} with \\texttt{type = HC0}, \\texttt{inner = cluster}, Bartlett weights, four lags from $\\lfloor T^{1/4}\\rfloor$, and no finite-sample adjustment. $^{***}$, $^{**}$, and $^{*}$ denote significance at the 1\\%, 5\\%, and 10\\% levels, respectively.",
   "  \\end{minipage}",
   "\\end{table}",
   ""
