@@ -399,8 +399,8 @@ The Amihud and Hurvich (2004) correction responds to Stambaugh's concern for bia
 The slope estimates for the conventional OLS and Amihud and Hurvich are $\hat{b}$ = 2.8038 and $\hat{b}_{AH}$ = 2.3412 respectively. This empirical result is in line with the small sample bias discussion above, proving that the corrected $\hat{u}_{t+1}^{c}$ controls for the contemporaneous correlation between the return and dividend-price ratio innovations and shrinks the inflated slope coefficient.
 
 \subsection*{2 (d)} 
-The in-sample OLS forecast uses the full-sample data following Equation 2.2 to derive in-sample fitted values $\hat{E}_{t}^{IS}[{xR}_{e}]$. I estimated the time-varying $a_{t}^{OS}$ and $b_{t}^{OS}$ via the OLS regression $xR_{e,t+1} =  a_{t}^{OS} + b_{t}^{OS} \cdot D_t/P_t + e_{t+1}$ using an expanding window and historical observations of $\{D_t/P_t, xR_{e,t+1}\}$ from (December 1927, December 1928) to (November 1938, November 1939). Then, I retrieved the out-of-sample forecast $\hat{E}_{t}^{OS}[{xR}_{e}]$ starting in December 1940, using estimated coefficients and observations in December 1939. The average historical expanding-window excess return $\overline{xR}_{e,t}$  is calculated as $\overline{xR_{e,t}} = (1/N_t) \cdot \sum_{i=1}^{N_t} xR_{e,i}$ where $N_t$ denotes the number of observations available at time t. The first $\overline{xR}_{e,t}$ uses $xR_{e,i}$ from December 1928 to December 1939. 
-Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}_{OS}$ as follows:
+The in-sample OLS forecast used the full-sample data following Equation 2.2 to derive in-sample fitted values $\hat{E}_{t}^{IS}[{xR}_{e}]$. I estimated the time-varying $a_{t}^{OS}$ and $b_{t}^{OS}$ via the OLS regression $xR_{e,t+1} =  a_{t}^{OS} + b_{t}^{OS} \cdot D_t/P_t + e_{t+1}$ using an expanding window and historical observations of $\{D_t/P_t, xR_{e,t+1}\}$ from (December 1927, December 1928) to (December 1938, December 1939). Then, I retrieved the out-of-sample forecast $\hat{E}_{t}^{OS}[{xR}_{e}]$ starting in December 1940 and using estimated coefficients and observations in December 1939. The average historical expanding-window excess return $\overline{xR}_{e,t}$ is calculated as $\overline{xR_{e,t}} = (1/N_t) \cdot \sum_{i=1}^{N_t} xR_{e,i}$ where $N_t$ denotes the number of observations available at time t. The first $\overline{xR}_{e,t}$ uses $xR_{e,i}$ from December 1928 to December 1939. 
+Using the out-of-sample forecasting errors, I calculated the out-of-sample $R^{2}_{OS}$ as follows:
 \[
     R^{2}_{OS}
     = 1 - 
@@ -414,10 +414,10 @@ Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}
     \displaystyle\sum_{t=1}^{T} 
     \left(
     xR_{e,t+1} - 
-    \frac{1}{T}\sum_{j=1}^{T} xR_{e,j+1}
+    \overline{xR_{e,t}} 
     \right)^2
     }
-    = -0.00664
+    = -0.00611
 \]
 
 \begin{figure}[H]
@@ -426,7 +426,7 @@ Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}
     \label{fig:q4}
 \end{figure}
 
-The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting errors from the OS OLS estimation with the first window covering January 1941 to December 1990. As observed from the plot below, the predictability power of the model severely declines around 2000 and beyond 2005. 
+The 50-year rolling window $R^{2}_{OS}$ uses 600 observations of forecasting errors from the OS OLS estimation with the first window covering January 1941 to December 1990. As observed from the plot below, the predictability power of the model severely declines as the horizon expands, turning negative around 2000. This evidence demonstrates that the OS forecasts performed worse than the intercept-only OLS regression with an expanding window.  
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/2d_2.png}
