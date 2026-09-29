@@ -310,7 +310,7 @@ rolling_plot <- ggplot(
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(color = "red", linewidth = 0.9) +
   scale_x_date(breaks = rolling_date_breaks, date_labels = "%Y") +
-  scale_y_continuous(breaks = seq(0, 0.10, by = 0.01)) +
+  scale_y_continuous(breaks = seq(0, 0.10, by = 0.02)) +
   labs(
     x = "Years",
     y = expression(R[OS2]^2),
