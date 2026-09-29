@@ -399,7 +399,7 @@ The Amihud and Hurvich (2004) correction responds to Stambaugh's concern for bia
 The slope estimates for the conventional OLS and Amihud and Hurvich are $\hat{b}$ = 2.8038 and $\hat{b}_{AH}$ = 2.3412 respectively. This empirical result is in line with the small sample bias discussion above, proving that the corrected $\hat{u}_{t+1}^{c}$ controls for the contemporaneous correlation between the return and dividend-price ratio innovations and shrinks the inflated slope coefficient.
 
 \subsection*{2 (d)} 
-The in-sample OLS forecast uses the full-sample data following Equation 2.2 to derive in-sample fitted values $\hat{E}_{t}^{IS}[{xR}_{e}]$. The out-of-sample OLS uses an expanding window with first forecast using the dividend-price ratio from December 1927 to November 1939 and excess return from December 1928 to November 1940 to fit $xR_{e,t+1} =  a_{t}^{OS} + b_{t}^{OS} \cdot D_t/P_t + e_{t+1}$ and retrieve out-of-sample fitted values $\hat{E}_{t}^{OS}[{xR}_{e}]$. The average historical expanding-window excess return $\overline{xR}_{e,t}$ is calculated as the sample mean during the same period. 
+The in-sample OLS forecast uses the full-sample data following Equation 2.2 to derive in-sample fitted values $\hat{E}_{t}^{IS}[{xR}_{e}]$. I estimated the time-varying $a_{t}^{OS}$ and $b_{t}^{OS}$ via the OLS regression $xR_{e,t+1} =  a_{t}^{OS} + b_{t}^{OS} \cdot D_t/P_t + e_{t+1}$ using an expanding window and historical observations of $\{D_t/P_t, xR_{e,t+1}\}$ from (December 1927, December 1928) to (November 1938, November 1939). Then, I retrieved the out-of-sample forecast $\hat{E}_{t}^{OS}[{xR}_{e}]$ starting in December 1940, using estimated coefficients and observations in December 1939. The average historical expanding-window excess return $\overline{xR}_{e,t}$  is calculated as $\overline{xR_{e,t}} = (1/N_t) \cdot \sum_{i=1}^{N_t} xR_{e,i}$ where $N_t$ denotes the number of observations available at time t. The first $\overline{xR}_{e,t}$ uses $xR_{e,i}$ from December 1928 to December 1939. 
 Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}_{OS}$ as follows:
 \[
     R^{2}_{OS}
@@ -417,7 +417,7 @@ Using the out-of-sample forecasting errors, I calculate the out-of-sample $R^{2}
     \frac{1}{T}\sum_{j=1}^{T} xR_{e,j+1}
     \right)^2
     }
-    = 0.001824
+    = -0.00664
 \]
 
 \begin{figure}[H]

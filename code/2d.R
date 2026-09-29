@@ -57,9 +57,9 @@ stopifnot(
   dates[target_index[n_forecasts]] == as.Date("2021-12-01"),
   all(target_index - origin_index == step_yr),
   dates[1L] == as.Date("1927-12-01"),
-  dates[first_origin_index - step_yr - 1L] == as.Date("1938-11-01"),
+  dates[first_origin_index - step_yr] == as.Date("1938-12-01"),
   dates[1L + step_yr] == as.Date("1928-12-01"),
-  dates[first_origin_index - 1L] == as.Date("1939-11-01")
+  dates[first_origin_index] == as.Date("1939-12-01")
 )
 
 a_OS <- numeric(n_forecasts)
@@ -75,9 +75,9 @@ for (forecast_number in seq_len(n_forecasts)) {
   current_origin <- origin_index[forecast_number]
 
   # Follow the prompt's literal calendar ranges. The first expanding sample uses
-  # D/P from December 1927-November 1938 and returns from December 1928-November
-  # 1939, so every target return predates the December 1939 forecast origin.
-  training_start_index <- seq_len(current_origin - step_yr - 1L)
+  # D/P from December 1927-December 1938 and returns from December 1928-December
+  # 1939, so every target return is available at the December 1939 origin.
+  training_start_index <- seq_len(current_origin - step_yr)
   training_target_index <- training_start_index + step_yr
 
   training_sample <- tibble(
@@ -121,7 +121,7 @@ forecast_results <- tibble(
 stopifnot(
   nrow(forecast_results) == 973L,
   all(is.finite(unlist(forecast_results[, 3:10]))),
-  identical(training_observations, 132:1104),
+  identical(training_observations, 133:1105),
   identical(historical_mean_observations, 133:1105),
   abs(historical_mean[1] -
     mean(excess_return[(step_yr + 1L):first_origin_index])) < 1e-14,
